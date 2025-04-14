@@ -39,10 +39,10 @@ const ContactPage = () => {
         <div className="text-center mb-10 space-y-1">
           <p>
             <span className="font-medium text-white">Email:</span>{" "}
-            dkg46742@gmail.com
+            famshoponline2210@gmail.com
           </p>
           <p>
-            <span className="font-medium text-white">Phone:</span> 01622980679
+            <span className="font-medium text-white">Phone:</span> 01976404704
           </p>
           <p>
             <span className="font-medium text-white">Location:</span>{" "}

@@ -7,12 +7,12 @@ const AboutPage = () => {
       <div className="max-w-6xl mx-auto">
         {/* Heading */}
         <h1 className="text-4xl md:text-5xl font-extrabold text-blue-700 text-center mb-6">
-          About Dk-Gadgets-hub 
+          About FAM 
         </h1>
 
         {/* Introduction */}
         <p className="text-gray-700 text-lg md:text-xl leading-relaxed text-center mb-10">
-          Welcome to Dk-Gadgets-hub —your one-stop destination for trendy fashion,
+          Welcome to FAM —your one-stop destination for trendy fashion,
           top-quality products, and a seamless online shopping experience.
         </p>
 
@@ -33,7 +33,7 @@ const AboutPage = () => {
               Who We Are
             </h2>
             <p className="text-gray-700 leading-relaxed text-base md:text-lg">
-              At Dk-Gadgets-hub , we believe fashion should be fun, affordable, and
+              At FAM , we believe fashion should be fun, affordable, and
               accessible to everyone. Our dedicated team curates a wide range of
               styles and brands to make sure you find something that fits your
               vibe. Whether you are looking for the latest arrivals or timeless
