@@ -2,11 +2,13 @@
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import Image from 'next/image';
 
 const UpdateProductPage = () => {
   const params = useParams();
   const router = useRouter();
   const id = params?.id;
+
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
@@ -39,7 +41,6 @@ const UpdateProductPage = () => {
     fetchData();
   }, [id]);
 
-  // Handle form field changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -48,13 +49,33 @@ const UpdateProductPage = () => {
     }));
   };
 
-  // Handle form submission
+  const handleImageUpload = async (e) => {
+    const imageFile = e.target.files[0];
+    if (!imageFile) return;
+
+    const imgFormData = new FormData();
+    imgFormData.append('image', imageFile);
+
+    try {
+      const res = await axios.post(
+        `https://api.imgbb.com/1/upload?key=5baab7a9e1cdc65f0721a2b32aef61bb`, // 🔐 Replace with your ImgBB API key
+        imgFormData
+      );
+      const imageUrl = res.data.data.url;
+      setFormData((prev) => ({ ...prev, image: imageUrl }));
+      alert("Image uploaded successfully!");
+    } catch (err) {
+      console.error("Image upload failed:", err);
+      alert("Image upload failed.");
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await axios.put(`https://fam-backend-49mw.onrender.com/api/products/${id}`, formData);
       alert('Product updated successfully');
-      router.push('/admin'); // Redirect to all products page
+      router.push('/admin');
     } catch (err) {
       console.error("Failed to update product:", err);
       alert("Failed to update product");
@@ -108,15 +129,24 @@ const UpdateProductPage = () => {
           </div>
 
           <div>
-            <label htmlFor='image' className='block text-sm font-medium'>Image URL</label>
+            <label htmlFor='image' className='block text-sm font-medium'>Upload Image</label>
             <input
-              type='text'
+              type='file'
               id='image'
               name='image'
-              value={formData.image}
-              onChange={handleChange}
+              accept='image/*'
+              onChange={handleImageUpload}
               className='w-full p-2 border border-gray-300 rounded'
+              required
             />
+            {formData.image && (
+              <Image
+              src={formData.image}
+              alt="Preview"
+              fill
+              className="object-cover rounded"
+            />
+            )}
           </div>
 
           <div>
