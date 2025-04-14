@@ -57,7 +57,7 @@ const Registration = () => {
     console.log('📦 Sending user to backend:', fullUser);
 
     // Send user data to backend
-    const response = await fetch('https://dk-gadget-server-3.onrender.com/api/auth/register', {
+    const response = await fetch('https://fam-backend-49mw.onrender.com/api/auth/register', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

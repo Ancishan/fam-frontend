@@ -46,7 +46,7 @@ const AddProduct = () => {
         setIsSubmitting(true);
         
         try {
-            const res = await axios.post("https://dk-gadget-server-3.onrender.com/products", product);
+            const res = await axios.post("https://fam-backend-49mw.onrender.com/products", product);
             console.log("Product saved:", res.data);
             alert("Product added successfully!");
             
@@ -83,7 +83,7 @@ const AddProduct = () => {
                 <input
                     type="text"
                     name="model"
-                    placeholder="Model"
+                    placeholder="Size"
                     value={product.model}
                     onChange={handleChange}
                     className="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 bg-gray-50 text-black"

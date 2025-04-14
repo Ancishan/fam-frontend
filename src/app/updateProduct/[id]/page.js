@@ -21,7 +21,7 @@ const UpdateProductPage = () => {
     if (!id) return;
     const fetchData = async () => {
       try {
-        const res = await axios.get(`https://dk-gadget-server-3.onrender.com/products/${id}`);
+        const res = await axios.get(`https://fam-backend-49mw.onrender.com/products/${id}`);
         setProduct(res.data.product);
         setFormData({
           name: res.data.product.name,
@@ -52,7 +52,7 @@ const UpdateProductPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`https://dk-gadget-server-3.onrender.com/api/products/${id}`, formData);
+      await axios.put(`https://fam-backend-49mw.onrender.com/api/products/${id}`, formData);
       alert('Product updated successfully');
       router.push('/admin'); // Redirect to all products page
     } catch (err) {

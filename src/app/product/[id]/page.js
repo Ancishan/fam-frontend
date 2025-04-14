@@ -19,7 +19,7 @@ const ProductDetails = () => {
         console.log("Fetching product with ID:", id); // Debug log
 
         const res = await axios.get(
-          `https://dk-gadget-server-3.onrender.com/products/${id}`
+          `https://fam-backend-49mw.onrender.com/products/${id}`
         );
 
         if (res.data.success) {
@@ -85,7 +85,7 @@ const ProductDetails = () => {
   const message = `Hello, I am interested in the ${product.name}. Please provide more details.`; // Customize message
 
   // WhatsApp link
-  const whatsappLink = `https://wa.me/${+8801622980679}?text=${encodeURIComponent(
+  const whatsappLink = `https://wa.me/${+8801976404704}?text=${encodeURIComponent(
     message
   )}`;
 
@@ -109,7 +109,7 @@ const ProductDetails = () => {
 
           {product.model && (
             <p className={`text-violet-900 ${modelFontSize}`}>
-              Model: {product.model}
+              Size: {product.model}
             </p>
           )}
 

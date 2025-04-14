@@ -11,7 +11,7 @@ const ShowProduct = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get("https://dk-gadget-server-3.onrender.com/products");
+        const response = await axios.get("https://fam-backend-49mw.onrender.com/products");
         console.log("API Response:", response.data); // Debug log
         setProducts(response.data);
       } catch (error) {

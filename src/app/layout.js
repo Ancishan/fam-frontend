@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Dk Gadget hub",
-  description: "Welcome To Gadget Hub",
+  title: "fam",
+  description: "Welcome To Fam",
 };
 
 export default function RootLayout({ children }) {

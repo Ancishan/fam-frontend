@@ -30,7 +30,7 @@ const Navbar = () => {
               href="/"
               className="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-purple-700 to-pink-700 tracking-wide uppercase hover:brightness-125 transition duration-300"
             >
-              Dk-Gadget's-Hub
+              FAM
             </Link>
           </div>
 
