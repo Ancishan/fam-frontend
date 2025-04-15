@@ -8,9 +8,9 @@ const UpdateProductPage = () => {
   const params = useParams();
   const router = useRouter();
   const id = params?.id;
-
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [imageUploading, setImageUploading] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     model: '',
@@ -53,20 +53,24 @@ const UpdateProductPage = () => {
     const imageFile = e.target.files[0];
     if (!imageFile) return;
 
-    const imgFormData = new FormData();
-    imgFormData.append('image', imageFile);
+    const formDataImage = new FormData();
+    formDataImage.append('image', imageFile);
 
+    setImageUploading(true);
     try {
-      const res = await axios.post(
-        `https://api.imgbb.com/1/upload?key=5baab7a9e1cdc65f0721a2b32aef61bb`, // 🔐 Replace with your ImgBB API key
-        imgFormData
-      );
+      // Replace this with your actual ImgBB API key
+      const res = await axios.post('https://api.imgbb.com/1/upload?key=5baab7a9e1cdc65f0721a2b32aef61bb', formDataImage);
       const imageUrl = res.data.data.url;
-      setFormData((prev) => ({ ...prev, image: imageUrl }));
-      alert("Image uploaded successfully!");
-    } catch (err) {
-      console.error("Image upload failed:", err);
-      alert("Image upload failed.");
+
+      setFormData((prevData) => ({
+        ...prevData,
+        image: imageUrl,
+      }));
+    } catch (error) {
+      console.error('Image upload failed:', error);
+      alert('Image upload failed');
+    } finally {
+      setImageUploading(false);
     }
   };
 
@@ -85,7 +89,7 @@ const UpdateProductPage = () => {
   if (loading) return <p>Loading...</p>;
 
   return (
-    <div className='mt-6'>
+    <div className='mt-6 max-w-xl mx-auto'>
       <h1 className='text-2xl font-bold mb-4'>Edit Product</h1>
       {product ? (
         <form onSubmit={handleSubmit} className='space-y-4'>
@@ -133,19 +137,19 @@ const UpdateProductPage = () => {
             <input
               type='file'
               id='image'
-              name='image'
               accept='image/*'
               onChange={handleImageUpload}
               className='w-full p-2 border border-gray-300 rounded'
-              required
             />
-            {formData.image && (
-              <Image
-              src={formData.image}
-              alt="Preview"
-              fill
-              className="object-cover rounded"
-            />
+            {imageUploading && <p className="text-blue-500 text-sm mt-1">Uploading...</p>}
+            {formData.image && !imageUploading && (
+           <Image
+           src={formData.image}
+           alt="Uploaded"
+           width={128}
+           height={128}
+           className="rounded object-cover"
+         />
             )}
           </div>
 
@@ -162,8 +166,12 @@ const UpdateProductPage = () => {
             ></textarea>
           </div>
 
-          <button type='submit' className='bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600'>
-            Update Product
+          <button
+            type='submit'
+            className='bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600'
+            disabled={imageUploading}
+          >
+            {imageUploading ? 'Uploading Image...' : 'Update Product'}
           </button>
         </form>
       ) : (

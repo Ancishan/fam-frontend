@@ -25,21 +25,21 @@ const ProductCard = ({ product }) => {
             onError={() => setImgSrc("/placeholder-image.jpg")}
           />
         </div>
-        <h3 className="text-lg font-bold text-gray-800 group-hover:text-blue-600 transition-colors">
+        <h3 className="text-lg font-bold text-pink-300 group-hover:text-pink-600 transition-colors">
           {name}
         </h3>
         <div className="mt-2 space-y-1">
           {model && (
-            <p className="text-sm text-violet-900">
+            <p className="text-sm text-pink-600">
               Size: <span className="font-medium">{model}</span>
             </p>
           )}
-          <p className="text-lg font-bold text-violet-900">৳ {price}</p>
+          <p className="text-lg font-bold text-pink-900">৳ {price}</p>
         </div>
       </div>
       <button
         onClick={handleViewDetails}
-        className="mt-4 w-full px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-blue-80000 transition-colors duration-300 shadow-sm hover:shadow-md active:scale-95"
+        className="mt-4 w-full px-4 py-2 bg-pink-950 text-white rounded-lg hover:bg-blue-80000 transition-colors duration-300 shadow-sm hover:shadow-md active:scale-95"
       >
         View Details
       </button>
