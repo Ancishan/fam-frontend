@@ -4,13 +4,15 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 
 const ProductCard = ({ product }) => {
-  const { name, model, price, image, _id } = product;
+  const { name, model, price, discount, image, _id } = product;
   const router = useRouter();
   const [imgSrc, setImgSrc] = useState(image);
 
   const handleViewDetails = () => {
     router.push(`/product/${_id}`);
   };
+
+  const discountedPrice = discount > 0 ? price - (price * discount) / 100 : price;
 
   return (
     <div className="flex flex-col justify-between border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1 hover:scale-[1.01] group">
@@ -34,7 +36,34 @@ const ProductCard = ({ product }) => {
               Size: <span className="font-medium">{model}</span>
             </p>
           )}
-          <p className="text-lg font-bold text-pink-900">৳ {price}</p>
+          
+          {/* Show original price and discounted price */}
+          <div className="flex items-center">
+            <p className="text-lg font-bold text-pink-900">
+              ৳ {price}
+            </p>
+
+            {/* If there's a discount, strike-through original price and show discounted price */}
+            {discount > 0 && (
+              <p className="text-lg font-bold text-red-500 ml-2 line-through">
+                ৳ {price}
+              </p>
+            )}
+          </div>
+
+          {/* Show the discounted price */}
+          {discount > 0 && (
+            <p className="text-lg font-bold text-green-500 mt-1">
+              Discounted Price: <span className="font-semibold">৳ {discountedPrice}</span>
+            </p>
+          )}
+
+          {/* Show discount percentage if available */}
+          {discount > 0 && (
+            <p className="text-sm text-green-600 font-medium">
+              Discount: <span className="font-semibold">{discount}%</span>
+            </p>
+          )}
         </div>
       </div>
       <button

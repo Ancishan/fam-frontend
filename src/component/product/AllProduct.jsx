@@ -13,7 +13,7 @@ const AllProduct = () => {
     const fetchProducts = async () => {
       try {
         const res = await axios.get(
-          "https://fam-backend-49mw.onrender.com/products"
+          "http://localhost:5000/products"
         );
         setProducts(res.data);
       } catch (err) {
@@ -28,7 +28,7 @@ const AllProduct = () => {
     if (window.confirm("Are you sure you want to delete this product?")) {
       try {
         await axios.delete(
-          `https://fam-backend-49mw.onrender.com/api/products/${id}`
+          `http://localhost:5000/api/products/${id}`
         );
         setProducts(products.filter((product) => product._id !== id));
         alert("Product deleted successfully");

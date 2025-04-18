@@ -19,7 +19,7 @@ const ProductDetails = () => {
         console.log("Fetching product with ID:", id); // Debug log
 
         const res = await axios.get(
-          `https://fam-backend-49mw.onrender.com/products/${id}`
+          `http://localhost:5000/products/${id}`
         );
 
         if (res.data.success) {
@@ -77,8 +77,8 @@ const ProductDetails = () => {
     );
   }
 
-  // Dynamic model-based font size
-  const modelFontSize = product.model ? "text-lg" : "text-base";
+  // Calculate discounted price
+  const discountedPrice = product.discount > 0 ? product.price - (product.price * product.discount) / 100 : product.price;
 
   // WhatsApp message and phone number
   const whatsappPhoneNumber = "1234567890"; // Replace with your WhatsApp number
@@ -108,7 +108,7 @@ const ProductDetails = () => {
           <h1 className="text-3xl font-bold text-violet-900">{product.name}</h1>
 
           {product.model && (
-            <p className={`text-violet-900 ${modelFontSize}`}>
+            <p className="text-violet-900 text-lg">
               Size: {product.model}
             </p>
           )}
@@ -118,9 +118,33 @@ const ProductDetails = () => {
             <p className="text-violet-900 text-base">{product.description}</p>
           )}
 
-          <p className="text-2xl font-semibold text-blue-600">
-          ৳ {product.price}
-          </p>
+          {/* Original Price and Discounted Price */}
+          <div className="flex items-center">
+            <p className="text-2xl font-semibold text-blue-600">
+              ৳ {product.price}
+            </p>
+
+            {/* If there's a discount, strike-through original price and show discounted price */}
+            {product.discount > 0 && (
+              <p className="text-lg font-bold text-red-500 ml-2 line-through">
+                ৳ {product.price}
+              </p>
+            )}
+          </div>
+
+          {/* Show the discounted price if available */}
+          {product.discount > 0 && (
+            <p className="text-2xl font-bold text-green-500 mt-1">
+              Discounted Price: <span className="font-semibold">৳ {discountedPrice}</span>
+            </p>
+          )}
+
+          {/* Show discount percentage if available */}
+          {product.discount > 0 && (
+            <p className="text-sm text-green-600 font-medium">
+              Discount: <span className="font-semibold">{product.discount}%</span>
+            </p>
+          )}
 
           {/* Order Now button linking to WhatsApp */}
           <div className="mt-6">
