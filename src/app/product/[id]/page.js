@@ -19,7 +19,7 @@ const ProductDetails = () => {
         console.log("Fetching product with ID:", id); // Debug log
 
         const res = await axios.get(
-          `http://localhost:5000/products/${id}`
+          `https://fam-backend-49mw.onrender.com/products/${id}`
         );
 
         if (res.data.success) {

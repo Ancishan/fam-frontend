@@ -23,7 +23,7 @@ const UpdateProductPage = () => {
     if (!id) return;
     const fetchData = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/products/${id}`);
+        const res = await axios.get(`https://fam-backend-49mw.onrender.com/products/${id}`);
         setProduct(res.data.product);
         setFormData({
           name: res.data.product.name,
@@ -77,7 +77,7 @@ const UpdateProductPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`http://localhost:5000/api/products/${id}`, formData);
+      await axios.put(`https://fam-backend-49mw.onrender.com/api/products/${id}`, formData);
       alert('Product updated successfully');
       router.push('/admin');
     } catch (err) {

@@ -57,7 +57,7 @@ const AddProduct = () => {
     setIsSubmitting(true);
 
     try {
-      const res = await axios.post("http://localhost:5000/products", product);
+      const res = await axios.post("https://fam-backend-49mw.onrender.com/products", product);
       console.log("Product saved:", res.data);
       alert("Product added successfully!");
       router.push("/admin");
