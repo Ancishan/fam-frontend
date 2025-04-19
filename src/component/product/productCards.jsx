@@ -1,11 +1,12 @@
 "use client";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
 const ProductCards = ({ product }) => {
-  const { name, model, price, image, _id } = product;
+  const { name, model, price, images, _id } = product; // Images is now an array
   const router = useRouter();
-  const [imgSrc, setImgSrc] = useState(image);
+  const [imgSrc, setImgSrc] = useState(images && images.length > 0 ? images[0] : "/placeholder-image.jpg");
 
   const handleViewDetails = () => {
     router.push(`/product/${_id}`);
@@ -15,14 +16,28 @@ const ProductCards = ({ product }) => {
     <div className="flex flex-col justify-between border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1 hover:scale-[1.01] group">
       <div>
         <div className="relative overflow-hidden rounded-lg aspect-square mb-3">
-          <Image
-            src={imgSrc}
-            alt={name}
-            width={500}
-            height={500}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-            onError={() => setImgSrc("/placeholder-image.jpg")}
-          />
+          {/* Loop through images and display them */}
+          {images && images.length > 0 ? (
+            <div className="relative">
+              <Image
+                src={imgSrc}
+                alt={name}
+                width={500}
+                height={500}
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                onError={() => setImgSrc("/placeholder-image.jpg")}
+              />
+            </div>
+          ) : (
+            <Image
+              src={imgSrc}
+              alt={name}
+              width={500}
+              height={500}
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+              onError={() => setImgSrc("/placeholder-image.jpg")}
+            />
+          )}
         </div>
         <h3 className="text-lg font-bold text-pink-300 group-hover:text-pink-600 transition-colors">
           {name}

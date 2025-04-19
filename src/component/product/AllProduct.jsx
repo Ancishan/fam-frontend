@@ -13,7 +13,7 @@ const AllProduct = () => {
     const fetchProducts = async () => {
       try {
         const res = await axios.get(
-          "https://fam-backend-49mw.onrender.com/products"
+          "http://localhost:5000/products"
         );
         setProducts(res.data);
       } catch (err) {
@@ -28,7 +28,7 @@ const AllProduct = () => {
     if (window.confirm("Are you sure you want to delete this product?")) {
       try {
         await axios.delete(
-          `https://fam-backend-49mw.onrender.com/api/products/${id}`
+          `http://localhost:5000/api/products/${id}`
         );
         setProducts(products.filter((product) => product._id !== id));
         alert("Product deleted successfully");
@@ -62,6 +62,8 @@ const AllProduct = () => {
             />
             <h3 className="text-xl text-violet-900 font-semibold">{product.name}</h3>
             <p className="text-violet-900">Price:৳{product.price}</p>
+            <p className="text-violet-900">Discount:{product.discount}%</p>
+            <p className="text-violet-900">Price:৳{product.category}</p>
             <p className="text-violet-900">Size: {product.size}</p>
 
             <div className="flex gap-2 mt-3">

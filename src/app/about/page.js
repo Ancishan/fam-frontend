@@ -20,15 +20,7 @@ const AboutPage = () => {
         <div className="grid md:grid-cols-2 gap-10 items-center bg-white/70 p-6 rounded-xl shadow-lg backdrop-blur-sm">
           {/* Responsive Image Section */}
           <div className="space-y-6">
-            <div className="relative w-full h-64 md:h-80 rounded-lg overflow-hidden shadow-md">
-              <Image
-                src="/ja.jpg"
-                alt="About FAMShop 1"
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 100vw, 50vw"
-              />
-            </div>
+        
             <div className="relative w-full h-64 md:h-80 rounded-lg overflow-hidden shadow-md">
               <Image
                 src="/jb.jpg"

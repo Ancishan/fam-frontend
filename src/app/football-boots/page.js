@@ -3,14 +3,14 @@ import ProductCard from "@/component/product/ProductCard";
 import useProducts from "@/hooks/useProducts";
 import Image from "next/image";
 
-const HomeKit = () => {
+const FootballBoots = () => {
   const { products } = useProducts();
-  const homeKit = products.filter((p) => p.category === "home-kit");
+  const homeKit = products.filter((p) => p.category === "football-boots");
 
   return (
     <div className="px-4 sm:px-6 lg:px-8 py-12">
     <h2 className="text-3xl font-bold text-center mb-8 text-pink-700">
-     Home Kit Collection
+     Football-Boots Collection
     </h2>
 
     {homeKit.length === 0 ? (
@@ -26,4 +26,4 @@ const HomeKit = () => {
   );
 };
 
-export default HomeKit;
+export default FootballBoots;

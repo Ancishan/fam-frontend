@@ -15,7 +15,8 @@ const Navbar = () => {
         { name: "Sports Item", path: "/sports" },
         { name: "Retro Collection", path: "/retro" },
         { name: "Home Kit Collection", path: "/home-kit" },
-        { name: "Player Edition", path: "/player" }
+        { name: "Player Edition", path: "/player" },
+        {name:"FootBall-Boots", path:"/football-boots"}
     ];
 
     // Create a ref for the dropdown menu

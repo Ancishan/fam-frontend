@@ -17,13 +17,22 @@ const UpdateProductPage = () => {
     price: '',
     image: '',
     description: '',
+    discount: '',
+    category: '',
   });
+
+  const categories = [
+    { value: "sports", label: "Sports Item" },
+    { value: "retro", label: "Retro Collection" },
+    { value: "home-kit", label: "Home Kit Collection" },
+    { value: "player-edition", label: "Player Edition" },
+  ];
 
   useEffect(() => {
     if (!id) return;
     const fetchData = async () => {
       try {
-        const res = await axios.get(`https://fam-backend-49mw.onrender.com/products/${id}`);
+        const res = await axios.get(`http://localhost:5000/products/${id}`);
         setProduct(res.data.product);
         setFormData({
           name: res.data.product.name,
@@ -31,6 +40,8 @@ const UpdateProductPage = () => {
           price: res.data.product.price,
           image: res.data.product.image,
           description: res.data.product.description,
+          discount: res.data.product.discount || '',
+          category: res.data.product.category || '',
         });
         setLoading(false);
       } catch (err) {
@@ -77,7 +88,7 @@ const UpdateProductPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`https://fam-backend-49mw.onrender.com/api/products/${id}`, formData);
+      await axios.put(`http://localhost:5000/api/products/${id}`, formData);
       alert('Product updated successfully');
       router.push('/admin');
     } catch (err) {
@@ -133,6 +144,37 @@ const UpdateProductPage = () => {
           </div>
 
           <div>
+            <label htmlFor='discount' className='block text-sm font-medium'>Discount (%)</label>
+            <input
+              type='number'
+              id='discount'
+              name='discount'
+              value={formData.discount}
+              onChange={handleChange}
+              className='w-full p-2 border border-gray-300 rounded'
+            />
+          </div>
+
+          <div>
+            <label htmlFor='category' className='block text-sm font-medium'>Category</label>
+            <select
+              id='category'
+              name='category'
+              value={formData.category}
+              onChange={handleChange}
+              className='w-full p-2 border text-pink-900 border-gray-300 rounded'
+              required
+            >
+              <option value=''>Select Category</option>
+              {categories.map((category) => (
+                <option key={category.value} value={category.value}>
+                  {category.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
             <label htmlFor='image' className='block text-sm font-medium'>Upload Image</label>
             <input
               type='file'
@@ -143,13 +185,13 @@ const UpdateProductPage = () => {
             />
             {imageUploading && <p className="text-blue-500 text-sm mt-1">Uploading...</p>}
             {formData.image && !imageUploading && (
-           <Image
-           src={formData.image}
-           alt="Uploaded"
-           width={128}
-           height={128}
-           className="rounded object-cover"
-         />
+              <Image
+                src={formData.image}
+                alt="Uploaded"
+                width={128}
+                height={128}
+                className="rounded object-cover"
+              />
             )}
           </div>
 
