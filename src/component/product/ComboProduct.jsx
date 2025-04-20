@@ -59,7 +59,7 @@ const ComboProduct = () => {
     setIsSubmitting(true);
 
     try {
-      const res = await axios.post("http://localhost:5000/combo", product);
+      const res = await axios.post("https://famdk-server.vercel.app/combo", product);
       console.log("Product saved:", res.data);
       alert("Product added successfully!");
       router.push("/admin");
