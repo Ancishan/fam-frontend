@@ -26,13 +26,15 @@ const UpdateProductPage = () => {
     { value: "retro", label: "Retro Collection" },
     { value: "home-kit", label: "Home Kit Collection" },
     { value: "player-edition", label: "Player Edition" },
+    { value: "football-boots", label: "Football-Boots" },
+    { value: "none", label: "None" },
   ];
 
   useEffect(() => {
     if (!id) return;
     const fetchData = async () => {
       try {
-        const res = await axios.get(`https://famdk-server.vercel.app/products/${id}`);
+        const res = await axios.get(`http://localhost:5000/products/${id}`);
         setProduct(res.data.product);
         setFormData({
           name: res.data.product.name,
@@ -88,7 +90,7 @@ const UpdateProductPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`https://famdk-server.vercel.app/api/products/${id}`, formData);
+      await axios.put(`http://localhost:5000/api/products/${id}`, formData);
       alert('Product updated successfully');
       router.push('/admin');
     } catch (err) {

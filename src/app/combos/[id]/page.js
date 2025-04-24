@@ -13,7 +13,7 @@ const ComboDetails = () => {
   useEffect(() => {
     const fetchCombo = async () => {
       try {
-        const res = await axios.get(`https://famdk-server.vercel.app/combos/${id}`);
+        const res = await axios.get(`http://localhost:5000/combos/${id}`);
         if (res.data.success) {
           setCombo(res.data.comboProduct); // Access the comboProduct object
         } else {

@@ -11,7 +11,7 @@ const Carousel = () => {
   useEffect(() => {
     const fetchBanners = async () => {
       try {
-        const res = await axios.get("https://famdk-server.vercel.app/banner");
+        const res = await axios.get("http://localhost:5000/banner");
         setBanners(res.data);
       } catch (err) {
         console.error("Failed to fetch banners:", err);

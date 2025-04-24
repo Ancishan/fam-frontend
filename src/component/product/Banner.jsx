@@ -10,7 +10,7 @@ const Banner = () => {
 
   // Fetch banners
   const fetchBanners = async () => {
-    const res = await axios.get("https://famdk-server.vercel.app/banner");
+    const res = await axios.get("http://localhost:5000/banner");
     setBanners(res.data);
   };
 
@@ -22,7 +22,7 @@ const Banner = () => {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this banner?")) {
       try {
-        await axios.delete(`https://famdk-server.vercel.app/banner/${id}`);
+        await axios.delete(`http://localhost:5000/banner/${id}`);
         fetchBanners();
         alert("Banner deleted successfully");
       } catch (err) {

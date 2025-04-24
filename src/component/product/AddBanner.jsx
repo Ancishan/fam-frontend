@@ -39,7 +39,7 @@ const AddBanner = () => {
 
       const imageUrl = uploadResponse.data.data.url;
 
-      await axios.post("https://famdk-server.vercel.app/banner", {
+      await axios.post("http://localhost:5000/banner", {
         image: imageUrl,
         caption,
       });

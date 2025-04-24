@@ -19,7 +19,7 @@ const ProductDetails = () => {
         console.log("Fetching product with ID:", id); // Debug log
 
         const res = await axios.get(
-          `https://famdk-server.vercel.app/products/${id}`
+          `http://localhost:5000/products/${id}`
         );
 
         if (res.data.success) {
