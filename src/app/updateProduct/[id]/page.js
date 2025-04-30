@@ -72,7 +72,7 @@ const UpdateProductPage = () => {
     setImageUploading(true);
     try {
       // Replace this with your actual ImgBB API key
-      const res = await axios.post('https://api.imgbb.com/1/upload?key=5baab7a9e1cdc65f0721a2b32aef61bb', formDataImage);
+      const res = await axios.post('https://api.imgbb.com/1/upload?key=8698cded860fcde3ab21fde4b38c9e94', formDataImage);
       const imageUrl = res.data.data.url;
 
       setFormData((prevData) => ({

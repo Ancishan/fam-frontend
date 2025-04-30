@@ -40,7 +40,7 @@ const ComboProduct = () => {
 
       try {
         const res = await axios.post(
-          "https://api.imgbb.com/1/upload?key=5baab7a9e1cdc65f0721a2b32aef61bb",
+          "https://api.imgbb.com/1/upload?key=8698cded860fcde3ab21fde4b38c9e94",
           formData
         );
         newImages.push(res.data.data.url); // Save image URL

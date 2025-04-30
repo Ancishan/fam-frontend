@@ -12,9 +12,7 @@ const AllProduct = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await axios.get(
-          "http://localhost:5000/products"
-        );
+        const res = await axios.get("http://localhost:5000/products");
         setProducts(res.data);
       } catch (err) {
         console.error("Failed to fetch products:", err);
@@ -27,9 +25,7 @@ const AllProduct = () => {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this product?")) {
       try {
-        await axios.delete(
-          `http://localhost:5000/api/products/${id}`
-        );
+        await axios.delete(`http://localhost:5000/api/products/${id}`);
         setProducts(products.filter((product) => product._id !== id));
         alert("Product deleted successfully");
       } catch (err) {
@@ -42,7 +38,6 @@ const AllProduct = () => {
   // Handle Update navigation
   const handleUpdate = (id) => {
     router.push(`/updateProduct/${id}`);
-    // This should navigate to your edit page
   };
 
   return (
@@ -58,24 +53,24 @@ const AllProduct = () => {
               width={500}
               height={300}
               className="w-full h-48 object-cover mb-2"
-              onError={() => setFallback(true)} 
+              onError={(e) => (e.target.src = "/placeholder.jpg")}
             />
             <h3 className="text-xl text-violet-900 font-semibold">{product.name}</h3>
-            <p className="text-violet-900">Price:৳{product.price}</p>
-            <p className="text-violet-900">Discount:{product.discount}%</p>
-            <p className="text-violet-900">Category:{product.category}</p>
+            <p className="text-violet-900">Price: ৳{product.price}</p>
+            <p className="text-violet-900">Discount: {product.discount}%</p>
+            <p className="text-violet-900">Category: {product.category}</p>
             <p className="text-violet-900">Size: {product.model}</p>
 
             <div className="flex gap-2 mt-3">
               <button
                 onClick={() => handleUpdate(product._id)}
-                className="bg-blue-500 text-violet-900 px-3 py-1 rounded hover:bg-blue-600"
+                className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
               >
                 Edit
               </button>
               <button
                 onClick={() => handleDelete(product._id)}
-                className="bg-red-500 text-violet-900 px-3 py-1 rounded hover:bg-red-600"
+                className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
               >
                 Delete
               </button>

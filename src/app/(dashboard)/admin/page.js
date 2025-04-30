@@ -30,7 +30,7 @@ const AdminPage = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:5000/admin-login", form);
+      const res = await axios.post("http://localhost:5000/admin", form);
       if (res.data.success) {
         setAuth(true);
         localStorage.setItem("isAdminAuthenticated", "true");
@@ -78,7 +78,7 @@ const AdminPage = () => {
     <div className="p-4 md:p-10 dark:bg-gray-900 dark:text-white min-h-screen scroll-smooth">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
-        <h2 className="text-2xl font-bold">Welcome Fams Admin</h2>  
+        <h2 className="text-2xl font-bold">Welcome Gadgets Admin</h2>  
           <button onClick={handleLogout} className="bg-red-500 text-white px-4 py-2 rounded">
             Logout
           </button>

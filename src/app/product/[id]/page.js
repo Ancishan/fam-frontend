@@ -85,7 +85,7 @@ const ProductDetails = () => {
   const message = `Hello, I am interested in the ${product.name}. Please provide more details.`; // Customize message
 
   // WhatsApp link
-  const whatsappLink = `https://wa.me/${+8801976404704}?text=${encodeURIComponent(
+  const whatsappLink = `https://wa.me/${+8801622980679}?text=${encodeURIComponent(
     message
   )}`;
 
@@ -105,11 +105,11 @@ const ProductDetails = () => {
 
         {/* Product Information */}
         <div className="space-y-4">
-          <h1 className="text-3xl font-bold text-violet-900">{product.name}</h1>
+          <h1 className="text-3xl font-bold text-red-800">{product.name}</h1>
 
           {product.model && (
-            <p className="text-violet-900 text-lg">
-              Size: {product.model}
+            <p className="text-yellow-400 text-lg">
+              Model: {product.model}
             </p>
           )}
 
