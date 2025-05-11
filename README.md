@@ -1,36 +1,104 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# FAM Online Shop (dk-gadgets-hub)
 
-## Getting Started
+A full-stack e-commerce web application built with **Next.js**, **Express.js**, and **MongoDB**, designed for both users and admins. The platform offers a clean shopping experience with WhatsApp-based ordering, along with an admin dashboard for product and banner management.
 
-First, run the development server:
+---
 
+## 🌐 Live Features : https://dk-gadget-hub.vercel.app
+
+### 🛍️ User (Frontend)
+- View **homepage** with:
+  - Carousel/banner
+  - All products
+  - Combo products
+- Click on any product to see **View Details**:
+  - Name, price, model, discount, discounted price, description
+- Click **Order Now** to redirect to WhatsApp with pre-filled product info
+- Responsive **navbar** and **footer** on all pages
+
+### 🔐 Admin (Backend)
+- Admin login and authentication
+- Admin dashboard features:
+  - Add product
+  - Add banner/carousel
+  - Add combo product
+  - **Edit/Delete** product
+  - **Edit/Delete** combo product
+  - **Edit/Delete** banner
+
+---
+
+## 🧱 Tech Stack
+
+### Frontend (`fam-client`)
+- **Next.js** 15
+- **Tailwind CSS** 4
+- **Axios**
+- **Framer Motion**
+- **Geist UI**
+- **JWT for client auth**
+
+### Backend (`fam-server`)
+- **Express.js** 5
+- **MongoDB & Mongoose**
+- **JWT** for admin authentication
+- **Multer** for image uploads
+- **Joi** for validation
+- **Dotenv, CORS**
+
+---
+
+## 📁 Project Structure
+
+fam-project/
+├── fam-client/ # Next.js frontend
+│ ├── components/
+│ ├── pages/
+│ └── styles/
+├── fam-server/ # Express.js backend
+│ ├── routes/
+│ ├── controllers/
+│ └── models/
+└── README.md
+
+
+---
+
+## 🚀 Installation
+
+### Clone the repository:
 ```bash
+git clone https://github.com/Ancishan/dk-gadget
+cd fam-project
+Run dk-Client
+cd fam-client
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Run Server
+cd fam-server
+npm install
+npm start
+📩 Order Process
+User browses homepage
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Clicks "View Details" of product
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+Clicks "Order Now" → redirects to WhatsApp with product data
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+🔐 Admin Routes (Protected)
+/admin/login
 
-## Learn More
+/admin/add-product
 
-To learn more about Next.js, take a look at the following resources:
+/admin/edit-product/:id
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+/admin/delete-product/:id
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+/admin/add-carousel
 
-## Deploy on Vercel
+/admin/add-combo
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+📌 Notes
+No payment gateway, ordering is done via WhatsApp
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Admin key is required to protect admin routes
