@@ -7,6 +7,7 @@ import ComboProduct from "@/component/product/ComboProduct";
 import AllComboProduct from "@/component/product/AllComboProduct";
 import AddBanner from "@/component/product/AddBanner";
 import Banner from "@/component/product/Banner";
+import OrderList from "@/component/order/OrderList";
 
 const AdminPage = () => {
   const [auth, setAuth] = useState(false);
@@ -90,7 +91,10 @@ const AdminPage = () => {
         <a href="#combo" className="hover:underline">Add Combo</a>
         <a href="#banner" className="hover:underline">Add Banner</a>
       </div>
-
+   <div id="orders" className="mb-10 border p-5 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+  <h3 className="text-xl font-semibold mb-4">Order Section</h3>
+  <OrderList />
+</div>
       {/* Product Section */}
       <div id="product" className="mb-10 border p-5 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
         <h3 className="text-xl font-semibold mb-4">Product Section</h3>

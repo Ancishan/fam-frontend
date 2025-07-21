@@ -1,8 +1,11 @@
 "use client";
+
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { useAuth } from "@/context/AuthContext"; // 👈 import auth context
 
 const Navbar = () => {
+  const { user, logout } = useAuth(); // 🔐 access user
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -37,24 +40,26 @@ const Navbar = () => {
           {/* Right side - Desktop Navigation */}
           <div className="hidden md:block">
             <div className="ml-10 flex items-center space-x-8">
-              <Link
-                href="/comboproductr"
-                className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-purple-700 to-pink-700 tracking-wide uppercase hover:brightness-125 transition duration-300"
-              >
+              <Link href="/comboproductr" className="gradient-link">
                 Combo Product
               </Link>
-              <Link
-                href="/about"
-                className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-purple-700 to-pink-700 tracking-wide uppercase hover:brightness-125 transition duration-300"
-              >
+              <Link href="/about" className="gradient-link">
                 About Us
               </Link>
-              <Link
-                href="/contact"
-                className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-purple-700 to-pink-700 tracking-wide uppercase hover:brightness-125 transition duration-300"
-              >
+              <Link href="/contact" className="gradient-link">
                 Contact Us
               </Link>
+
+              {/* ✅ Show if user is logged in */}
+              {user && (
+                <Link
+                  href="/my-orders"
+                  className="text-white bg-pink-600 px-3 py-1 rounded-lg hover:bg-pink-700 transition"
+                  title="My Orders"
+                >
+                  💼 My Orders
+                </Link>
+              )}
             </div>
           </div>
 
@@ -105,24 +110,20 @@ const Navbar = () => {
       {/* Mobile menu */}
       <div className={`md:hidden ${isMenuOpen ? "block" : "hidden"}`}>
         <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-indigo-900 bg-opacity-95">
-          <Link
-            href="/newArrivals"
-            className="block px-3 py-2 rounded-md text-base font-mediumtext-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-purple-700 to-pink-700 tracking-wide uppercase hover:brightness-125 transition duration-300"
-          >
+          <Link href="/newArrivals" className="mobile-link">
             New Arrivals
           </Link>
-          <Link
-            href="/about"
-            className="block px-3 py-2 rounded-md text-base font-medium text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-purple-700 to-pink-700 tracking-wide uppercase hover:brightness-125 transition duration-300"
-          >
+          <Link href="/about" className="mobile-link">
             About Us
           </Link>
-          <Link
-            href="/contact"
-            className="block px-3 py-2 rounded-md text-base font-medium text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-purple-700 to-pink-700 tracking-wide uppercase hover:brightness-125 transition duration-300"
-          >
+          <Link href="/contact" className="mobile-link">
             Contact Us
           </Link>
+          {user && (
+            <Link href="/my-orders" className="text-white block px-4 py-2">
+              💼 My Orders
+            </Link>
+          )}
         </div>
       </div>
     </nav>

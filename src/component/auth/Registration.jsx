@@ -1,144 +1,64 @@
-'use client';
-import { useState } from 'react';
+"use client";
+import { useState } from "react";
 
-const Registration = () => {
-  const [user, setUser] = useState({
-    name: '',
-    photo: null,
-    phone: '',
-    email: '',
-    password: '',
-    role: 'user',
-  });
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { auth } from "@/firebase";
 
-  const handleChange = e => {
-    const { name, value, files } = e.target;
-    if (name === 'photo') {
-      setUser({ ...user, photo: files[0] });
-    } else {
-      setUser({ ...user, [name]: value });
-    }
-  };
+const Register = () => {
+  const [form, setForm] = useState({ email: "", password: "", name: "" });
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
-  const handleSubmit = async e => {
+  const handleRegister = async (e) => {
     e.preventDefault();
-
-    if (!user.photo) {
-      alert('Please select a profile photo');
-      return;
-    }
-
-    // Upload image to imgbb
-    const formData = new FormData();
-    formData.append('image', user.photo);
-
-    const res = await fetch('https://api.imgbb.com/1/upload?key=8698cded860fcde3ab21fde4b38c9e94', {
-      method: 'POST',
-      body: formData,
-    });
-
-    const data = await res.json();
-    const photoURL = data?.data?.url;
-
-    if (!photoURL) {
-      alert('Image upload failed!');
-      return;
-    }
-
-    const fullUser = {
-      name: user.name,
-      photo: photoURL,
-      phone: user.phone,
-      email: user.email,
-      password: user.password,
-      role: user.role,
-    };
-
-    console.log('📦 Sending user to backend:', fullUser);
-
-    // Send user data to backend
-    const response = await fetch('http://localhost:5000/api/auth/register', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(fullUser),
-    });
-
-    const result = await response.json();
-    if (response.ok) {
-      alert('User registered successfully');
-    } else {
-      alert('Registration failed: ' + result.message);
+    setError("");
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, form.email, form.password);
+      // Update display name
+      await updateProfile(userCredential.user, {
+        displayName: form.name,
+      });
+      setSuccess("Registration successful! You can now login.");
+      setForm({ email: "", password: "", name: "" });
+    } catch (err) {
+      setError(err.message);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-100 to-pink-200 p-4">
-      <div className="w-full max-w-md bg-white shadow-xl rounded-xl p-8 space-y-5">
-        <h2 className="text-2xl font-bold text-center text-pink-600">Register</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            name="name"
-            type="text"
-            placeholder="Full Name"
-            value={user.name}
-            onChange={handleChange}
-            className="input input-bordered w-full"
-            required
-          />
-          <input
-            name="photo"
-            type="file"
-            accept="image/*"
-            onChange={handleChange}
-            className="file-input file-input-bordered w-full"
-            required
-          />
-          <input
-            name="phone"
-            type="text"
-            placeholder="Mobile Number"
-            value={user.phone}
-            onChange={handleChange}
-            className="input input-bordered w-full"
-            required
-          />
-          <input
-            name="email"
-            type="email"
-            placeholder="Email"
-            value={user.email}
-            onChange={handleChange}
-            className="input input-bordered w-full"
-            required
-          />
-          <input
-            name="password"
-            type="password"
-            placeholder="Password"
-            value={user.password}
-            onChange={handleChange}
-            className="input input-bordered w-full"
-            required
-          />
-
-          <button
-            type="submit"
-            className="w-full bg-pink-500 text-white py-2 rounded-md hover:bg-pink-600 transition duration-200"
-          >
-            Register
-          </button>
-        </form>
-        <p className="text-sm text-center text-gray-600">
-          Already have an account?{' '}
-          <a className="text-pink-500 hover:underline" href="/login">
-            Login
-          </a>
-        </p>
-      </div>
-    </div>
+    <form onSubmit={handleRegister} className="max-w-sm mx-auto p-4">
+      <h2 className="text-2xl mb-4">Register</h2>
+      <input
+        type="text"
+        placeholder="Name"
+        value={form.name}
+        onChange={(e) => setForm({ ...form, name: e.target.value })}
+        required
+        className="w-full p-2 mb-3 border rounded"
+      />
+      <input
+        type="email"
+        placeholder="Email"
+        value={form.email}
+        onChange={(e) => setForm({ ...form, email: e.target.value })}
+        required
+        className="w-full p-2 mb-3 border rounded"
+      />
+      <input
+        type="password"
+        placeholder="Password"
+        value={form.password}
+        onChange={(e) => setForm({ ...form, password: e.target.value })}
+        required
+        className="w-full p-2 mb-3 border rounded"
+      />
+      {error && <p className="text-red-500 mb-2">{error}</p>}
+      {success && <p className="text-green-500 mb-2">{success}</p>}
+      <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded">
+        Register
+      </button>
+    </form>
   );
 };
 
-export default Registration;
+export default Register;
