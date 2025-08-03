@@ -52,9 +52,10 @@ const ShowProductt = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <h2 className="text-2xl text-pink-400 md:text-3xl font-semibold text-center mb-8 text-blue-800-800">
-        Our Products
-      </h2>
+     <h2 className="text-2xl md:text-3xl font-semibold text-center mb-8 text-gray-900 dark:text-white">
+  Our Products
+</h2>
+
       <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
         {products.map((product) => (
           <ProductCard key={product._id} product={product} />

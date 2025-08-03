@@ -67,9 +67,10 @@ const ProductCard = ({ product }) => {
       </div>
 
       {/* Optional: Keep the button for UI, but no need for onClick */}
-      <div className="mt-4 w-full px-3 py-1.5 text-xs sm:px-4 sm:py-2 sm:text-base bg-pink-600 text-white rounded-lg transition-colors duration-300 shadow-sm dark:bg-pink-700 text-center">
-        More Details
-      </div>
+     <div className="mt-4 w-full px-3 py-1.5 text-xs sm:px-4 sm:py-2 sm:text-base bg-neutral-200 dark:bg-neutral-700 text-gray-800 dark:text-gray-100 rounded-lg transition-colors duration-300 shadow-sm text-center">
+  More Details
+</div>
+
     </div>
   );
 };

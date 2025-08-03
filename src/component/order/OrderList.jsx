@@ -73,6 +73,7 @@ const OrderList = () => {
               <th className="border px-4 py-2">Transaction ID</th>
               <th className="border px-4 py-2">Status</th>
               <th className="border px-4 py-2">Action</th>
+              <th className="border px-4 py-2">Ordered By</th>
             </tr>
           </thead>
           <tbody>
@@ -83,15 +84,25 @@ const OrderList = () => {
                 <td className="border px-4 py-2">{order.buyerEmail}</td>
                 <td className="border px-4 py-2">{order.phone}</td>
                 <td className="border px-4 py-2">{order.address}</td>
-                <td className="border px-4 py-2 text-center">{order.quantity}</td>
+                <td className="border px-4 py-2 text-center">
+                  {order.quantity}
+                </td>
                 <td className="border px-4 py-2">৳ {order.totalPrice}</td>
-                <td className="border px-4 py-2">{formatDate(order.createdAt)}</td>
-                <td className="border px-4 py-2">{order.transactionId || "Not Provided"}</td>
-                <td className="border px-4 py-2 capitalize">{order.status || "pending"}</td>
+                <td className="border px-4 py-2">
+                  {formatDate(order.createdAt)}
+                </td>
+                <td className="border px-4 py-2">
+                  {order.transactionId || "Not Provided"}
+                </td>
+                <td className="border px-4 py-2 capitalize">
+                  {order.status || "pending"}
+                </td>
                 <td className="border px-4 py-2">
                   <select
                     value={order.status || "pending"}
-                    onChange={(e) => handleStatusChange(order._id, e.target.value)}
+                    onChange={(e) =>
+                      handleStatusChange(order._id, e.target.value)
+                    }
                     className="border rounded px-2 py-1"
                   >
                     {statusOptions.map((status) => (
@@ -100,6 +111,13 @@ const OrderList = () => {
                       </option>
                     ))}
                   </select>
+                </td>
+                <td className="border px-4 py-2">
+                  {order.orderedBy === "website"
+                    ? "Website"
+                    : order.orderedBy === "bkash"
+                    ? "bKash"
+                    : "Unknown"}
                 </td>
               </tr>
             ))}

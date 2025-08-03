@@ -1,131 +1,191 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
-import { useAuth } from "@/context/AuthContext"; // 👈 import auth context
+import { useState } from "react";
+import { useAuth } from "@/context/AuthContext";
 
 const Navbar = () => {
-  const { user, logout } = useAuth(); // 🔐 access user
-  const [isScrolled, setIsScrolled] = useState(false);
+  const { user, loading, logout } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  if (loading) {
+    return (
+      <nav className="fixed w-full z-50 bg-white dark:bg-gray-900 shadow-md transition-colors duration-300">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            <span className="text-gray-500 select-none">Loading...</span>
+          </div>
+        </div>
+      </nav>
+    );
+  }
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      alert("Logout successful");
+      setIsMenuOpen(false);
+    } catch (error) {
+      console.error("Logout failed:", error);
+      alert("Logout failed, try again.");
+    }
+  };
 
   return (
-    <nav
-      className={`fixed w-full z-50 transition-all duration-300 ${
-        isScrolled
-          ? "bg-gray-900 shadow-lg"
-          : "bg-gradient-to-r from-indigo-900"
-      }`}
-    >
+    <nav className="fixed w-full z-50 bg-white dark:bg-gray-900 shadow-md transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          {/* Left side - Brand */}
-          <div className="flex-shrink-0">
+          {/* Brand */}
+          <Link href="/" className="flex items-center space-x-3">
+            <img
+              src="/logo.jpg"
+              alt="DK Gadget's Hub"
+              className="h-10 w-10 rounded-full object-cover ring-2 ring-indigo-600 transition-transform duration-300 hover:scale-105"
+            />
+            <span className="text-xl font-semibold text-gray-900 dark:text-white select-none">
+              DK Gadget's Hub
+            </span>
+          </Link>
+
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center space-x-8">
             <Link
-              href="/"
-              className="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-purple-700 to-pink-700 tracking-wide uppercase hover:brightness-125 transition duration-300"
+              href="/about"
+              className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition"
             >
-              Dk-Gadget's-Hub
+              About Us
             </Link>
-          </div>
+            <Link
+              href="/contact"
+              className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition"
+            >
+              Contact Us
+            </Link>
 
-          {/* Right side - Desktop Navigation */}
-          <div className="hidden md:block">
-            <div className="ml-10 flex items-center space-x-8">
-              <Link href="/comboproductr" className="gradient-link">
-                Combo Product
+            {!user ? (
+              <Link
+                href="/login"
+                className="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition"
+              >
+                Login
               </Link>
-              <Link href="/about" className="gradient-link">
-                About Us
-              </Link>
-              <Link href="/contact" className="gradient-link">
-                Contact Us
-              </Link>
-
-              {/* ✅ Show if user is logged in */}
-              {user && (
+            ) : (
+              <>
                 <Link
                   href="/my-orders"
-                  className="text-white bg-pink-600 px-3 py-1 rounded-lg hover:bg-pink-700 transition"
+                  className="bg-indigo-600 text-white px-4 py-1 rounded-md hover:bg-indigo-700 transition"
                   title="My Orders"
                 >
                   💼 My Orders
                 </Link>
-              )}
-            </div>
+                <button
+                  onClick={handleLogout}
+                  className="text-indigo-600 dark:text-indigo-400 hover:underline ml-4 font-medium"
+                >
+                  Logout
+                </button>
+              </>
+            )}
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden">
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md text-white hover:text-indigo-200 focus:outline-none"
-              aria-expanded="false"
-            >
-              <span className="sr-only">Open main menu</span>
-              {!isMenuOpen ? (
-                <svg
-                  className="block h-6 w-6"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
-                </svg>
-              ) : (
-                <svg
-                  className="block h-6 w-6"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              )}
-            </button>
-          </div>
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="md:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            aria-label="Toggle menu"
+          >
+            {!isMenuOpen ? (
+              <svg
+                className="h-6 w-6"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              </svg>
+            ) : (
+              <svg
+                className="h-6 w-6"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            )}
+          </button>
         </div>
       </div>
 
       {/* Mobile menu */}
-      <div className={`md:hidden ${isMenuOpen ? "block" : "hidden"}`}>
-        <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-indigo-900 bg-opacity-95">
-          <Link href="/newArrivals" className="mobile-link">
-            New Arrivals
+      {isMenuOpen && (
+        <div className="md:hidden bg-white dark:bg-gray-900 shadow-inner px-4 pt-2 pb-4 space-y-1">
+          <Link
+            href="/comboproductr"
+            className="block px-3 py-2 rounded-md text-gray-800 dark:text-gray-300 hover:bg-indigo-100 dark:hover:bg-indigo-700 transition"
+            onClick={() => setIsMenuOpen(false)}
+          >
+            Combo Product
           </Link>
-          <Link href="/about" className="mobile-link">
+          <Link
+            href="/about"
+            className="block px-3 py-2 rounded-md text-gray-800 dark:text-gray-300 hover:bg-indigo-100 dark:hover:bg-indigo-700 transition"
+            onClick={() => setIsMenuOpen(false)}
+          >
             About Us
           </Link>
-          <Link href="/contact" className="mobile-link">
+          <Link
+            href="/contact"
+            className="block px-3 py-2 rounded-md text-gray-800 dark:text-gray-300 hover:bg-indigo-100 dark:hover:bg-indigo-700 transition"
+            onClick={() => setIsMenuOpen(false)}
+          >
             Contact Us
           </Link>
-          {user && (
-            <Link href="/my-orders" className="text-white block px-4 py-2">
-              💼 My Orders
+
+          {!user ? (
+            <Link
+              href="/login"
+              className="block px-3 py-2 rounded-md text-gray-800 dark:text-gray-300 hover:bg-indigo-100 dark:hover:bg-indigo-700 transition"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Login
             </Link>
+          ) : (
+            <>
+              <Link
+                href="/my-orders"
+                className="block px-3 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700 transition"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                💼 My Orders
+              </Link>
+              <button
+                onClick={() => {
+                  handleLogout();
+                  setIsMenuOpen(false);
+                }}
+                className="block w-full text-left px-3 py-2 rounded-md text-indigo-600 dark:text-indigo-400 hover:underline font-medium"
+              >
+                Logout
+              </button>
+            </>
           )}
         </div>
-      </div>
+      )}
     </nav>
   );
 };
