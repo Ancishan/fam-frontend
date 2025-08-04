@@ -8,6 +8,7 @@ import AllComboProduct from "@/component/product/AllComboProduct";
 import AddBanner from "@/component/product/AddBanner";
 import Banner from "@/component/product/Banner";
 import OrderList from "@/component/order/OrderList";
+import Link from "next/link";
 
 const AdminPage = () => {
   const [auth, setAuth] = useState(false);
@@ -93,7 +94,7 @@ const AdminPage = () => {
       </div>
    <div id="orders" className="mb-10 border p-5 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
   <h3 className="text-xl font-semibold mb-4">Order Section</h3>
-  <OrderList />
+    <Link  href='/order' className="text-3xl text-red-600 underline">OrderList</Link>
 </div>
       {/* Product Section */}
       <div id="product" className="mb-10 border p-5 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">

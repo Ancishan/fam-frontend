@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { useRouter, useSearchParams } from "next/navigation";
 import { auth } from "@/firebase";
 import Link from "next/link";
@@ -16,6 +16,7 @@ const Login = () => {
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
 
   const emailIsValid = (email) =>
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -55,6 +56,24 @@ const Login = () => {
     }
 
     setLoading(false);
+  };
+
+  // Google Sign-In handler
+  const handleGoogleSignIn = async () => {
+    setError("");
+    setGoogleLoading(true);
+
+    const provider = new GoogleAuthProvider();
+
+    try {
+      await signInWithPopup(auth, provider);
+      router.push(redirectUrl);
+    } catch (err) {
+      setError("Google Sign-In failed. Please try again.");
+      console.error("Google Sign-In error:", err);
+    }
+
+    setGoogleLoading(false);
   };
 
   return (
@@ -109,6 +128,41 @@ const Login = () => {
             {loading ? "Logging in..." : "Login"}
           </button>
         </form>
+
+        <div className="my-4 flex items-center justify-center space-x-2">
+          <span className="text-gray-400 dark:text-gray-500">or</span>
+        </div>
+
+        {/* Google Sign-In Button */}
+        <button
+          onClick={handleGoogleSignIn}
+          disabled={googleLoading}
+          className="w-full flex items-center justify-center py-3 border border-gray-300 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition cursor-pointer"
+        >
+          <svg
+            className="w-6 h-6 mr-2"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              fill="#4285F4"
+              d="M23.64 12.204c0-.804-.072-1.575-.204-2.319H12v4.388h6.367a5.448 5.448 0 01-2.37 3.577v2.973h3.827c2.244-2.064 3.52-5.112 3.52-8.62z"
+            />
+            <path
+              fill="#34A853"
+              d="M12 24c3.24 0 5.965-1.068 7.953-2.897l-3.827-2.973c-1.065.714-2.43 1.134-4.126 1.134-3.172 0-5.864-2.144-6.825-5.02H1.187v3.146A11.998 11.998 0 0012 24z"
+            />
+            <path
+              fill="#FBBC05"
+              d="M5.175 14.244a7.193 7.193 0 010-4.488V6.61H1.187a11.98 11.98 0 000 10.778l3.988-3.144z"
+            />
+            <path
+              fill="#EA4335"
+              d="M12 4.756c1.7 0 3.225.58 4.426 1.72l3.316-3.316C17.96 1.27 15.233 0 12 0 7.04 0 2.73 2.856 1.187 6.61l3.988 3.146C5.936 7.482 8.706 4.756 12 4.756z"
+            />
+          </svg>
+          {googleLoading ? "Signing in..." : "Sign in with Google"}
+        </button>
 
         {error && (
           <p

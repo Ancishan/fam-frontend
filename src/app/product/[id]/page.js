@@ -26,7 +26,8 @@ const ProductDetails = () => {
   });
 
   const [paymentMethod, setPaymentMethod] = useState("cod");
-  const [orderConfirmed, setOrderConfirmed] = useState(false); // নতুন state
+  const [orderConfirmedCOD, setOrderConfirmedCOD] = useState(false); // For COD confirmation
+  const [bkashInitiated, setBkashInitiated] = useState(false); // For bKash initiation
 
   useEffect(() => {
     if (user?.email) {
@@ -54,8 +55,7 @@ const ProductDetails = () => {
 
   if (loading || loadingProduct)
     return <p className="text-center mt-10">Loading...</p>;
-  if (error)
-    return <p className="text-center mt-10 text-red-600">{error}</p>;
+  if (error) return <p className="text-center mt-10 text-red-600">{error}</p>;
   if (!product) return null;
 
   const discountedPrice =
@@ -63,9 +63,9 @@ const ProductDetails = () => {
       ? product.price - (product.price * product.discount) / 100
       : product.price;
 
+  const deliveryCharge = 99; // Added delivery charge variable
   const totalPrice = discountedPrice * quantity;
-
-  const deliveryCharge = 50;
+  const totalPriceWithDelivery = totalPrice + deliveryCharge; // New variable for total with delivery
 
   const whatsappNumber = "8801622980679";
 
@@ -86,19 +86,19 @@ const ProductDetails = () => {
   )}`;
 
   const bkashFullPaymentLink =
-    "https://shop.bkash.com/tansir-telecom01318962340/paymentlink/default-payment";
+    "https://shop.bkash.com/tansir-telecom01318962340/paymentlink";
 
   const bkashDeliveryChargeLink =
-    "https://shop.bkash.com/tansir-telecom01318962340/paymentlink/delivery-charge";
+    "https://shop.bkash.com/tansir-telecom01318962340/paymentlink";
 
-  const handleBkashPayment = async () => {
+  const handleBkashOrderAndRedirect = async () => {
     if (!user) {
       router.push(`/login?redirect=/product/${id}`);
       return;
     }
 
     if (!formData.name || !formData.phone || !formData.address) {
-      toast.error("দয়া করে সবগুলো ফর্ম ফিলাফ করুন"); // Toast notification
+      toast.error("দয়া করে সবগুলো ফর্ম ফিলাপ করুন");
       return;
     }
 
@@ -107,42 +107,43 @@ const ProductDetails = () => {
         productId: product._id,
         productName: product.name,
         quantity,
-        totalPrice,
+        totalPrice: totalPriceWithDelivery, // Use the new total price with delivery
         buyerName: formData.name,
         buyerEmail: formData.email,
         phone: formData.phone,
         address: formData.address,
-        paymentMethod,
+        paymentMethod, // Will be "deliveryBkash"
         orderedBy: "bkash",
+        status: "bkash_pending_verification", // New status for bKash orders awaiting verification
       };
 
       const res = await axios.post("http://localhost:5000/order", orderData);
 
       if (res.data.success) {
-        if (paymentMethod === "fullBkash") {
-          window.open(bkashFullPaymentLink, "_blank");
-        } else if (paymentMethod === "deliveryBkash") {
+        if (paymentMethod === "deliveryBkash") {
           window.open(bkashDeliveryChargeLink, "_blank");
         } else {
-          toast.success("আপনি ক্যাশ অন ডেলিভারি পেমেন্ট পদ্ধতি বেছে নিয়েছেন।"); // Toast notification
+          window.open(bkashFullPaymentLink, "_blank"); // If 'fullBkash' option is added later
         }
+        setBkashInitiated(true); // Set the flag to show bKash specific confirmation
+        // Do NOT set orderConfirmedCOD here, as it's for COD only
       } else {
-        toast.error("❌ Order failed. Try again."); // Toast notification
+        toast.error("❌ অর্ডার ব্যর্থ হয়েছে। আবার চেষ্টা করুন।");
       }
     } catch (err) {
       console.error(err);
-      toast.error("❌ Something went wrong!"); // Toast notification
+      toast.error("❌ কিছু ভুল হয়েছে!");
     }
   };
 
-  const handleOrderSubmit = async () => {
+  const handleCODOrderSubmit = async () => {
     if (!user) {
       router.push(`/login?redirect=/product/${id}`);
       return;
     }
 
     if (!formData.name || !formData.phone || !formData.address) {
-      toast.error("দয়া করে সবগুলো ফর্ম ফিলাফ করুন"); // Toast notification
+      toast.error("দয়া করে সবগুলো ফর্ম ফিলাপ করুন");
       return;
     }
 
@@ -151,31 +152,58 @@ const ProductDetails = () => {
         productId: product._id,
         productName: product.name,
         quantity,
-        totalPrice,
+        totalPrice: totalPriceWithDelivery, // Use the new total price with delivery
         buyerName: formData.name,
         buyerEmail: formData.email,
         phone: formData.phone,
         address: formData.address,
-        paymentMethod,
+        paymentMethod: "cod",
         orderedBy: "website",
+        status: "pending", // Default status for COD
       };
 
       const res = await axios.post("http://localhost:5000/order", orderData);
 
       if (res.data.success) {
-        setOrderConfirmed(true);
+        setOrderConfirmedCOD(true); // Set COD specific confirmation
+        // Do NOT set bkashInitiated here
       } else {
-        toast.error("❌ অর্ডার ব্যর্থ হয়েছে। আবার চেষ্টা করুন।"); // Toast notification
+        toast.error("❌ অর্ডার ব্যর্থ হয়েছে। আবার চেষ্টা করুন।");
       }
     } catch (err) {
       console.error(err);
-      toast.error("❌ কিছু ভুল হয়েছে!"); // Toast notification
+      toast.error("❌ কিছু ভুল হয়েছে!");
     }
   };
 
   return (
     <div className="max-w-7xl mx-auto mt-24 px-4 sm:px-6 lg:px-8">
-      {orderConfirmed ? (
+      {bkashInitiated ? (
+        <div className="bg-blue-100 border border-blue-400 text-blue-700 px-6 py-8 rounded-lg shadow-md max-w-lg mx-auto text-center">
+          <h2 className="text-xl font-semibold mb-4">
+            বিকাশ পেমেন্ট এর জন্য ধন্যবাদ!
+          </h2>
+          <p className="mb-6">
+            অনুগ্রহ করে নতুন ট্যাবে খোলা বিকাশ পেমেন্ট সম্পন্ন করুন। পেমেন্ট সফল
+            হলে, আপনার **ট্রানজেকশন আইডি** (Transaction ID) সংরক্ষণ করুন।
+            <br />
+            এরপর, আপনার অর্ডারটি নিশ্চিত করতে "আমার অর্ডারসমূহ" সেকশনে গিয়ে
+            ট্রানজেকশন আইডিটি জমা দিন।
+          </p>
+          <button
+            onClick={() => router.push("/my-orders")}
+            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-md transition mr-2"
+          >
+            আমার অর্ডারসমূহ
+          </button>
+          <button
+            onClick={() => router.push("/")}
+            className="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-6 rounded-md transition"
+          >
+            হোম পেজ
+          </button>
+        </div>
+      ) : orderConfirmedCOD ? (
         <div className="bg-green-100 border border-green-400 text-green-700 px-6 py-8 rounded-lg shadow-md max-w-lg mx-auto text-center">
           <h2 className="text-xl font-semibold mb-4">
             ধন্যবাদ dk-gadgets-hub এর সাথে থাকার জন্য।
@@ -206,8 +234,17 @@ const ProductDetails = () => {
               <h1 className="text-3xl font-bold text-black">{product.name}</h1>
               <p className="text-sm text-black mt-1">Model: {product.model}</p>
               <p className="text-black mt-4">{product.description}</p>
-              <p className="text-2xl font-semibold text-black mt-6">
+              {/* <p className="text-2xl font-semibold text-black mt-6">
                 ৳ {discountedPrice} x {quantity} = ৳ {totalPrice}
+              </p> */}
+              {/* This is the new line showing the breakdown */}
+              <p className="text-lg font-semibold text-black mt-2 leading-relaxed">
+                পণ্যের মূল্য: {totalPrice} টাকা
+                <br />
+                ডেলিভারি চার্জ: {deliveryCharge} টাকা
+                <br />
+                <span className="block border-t-2 border-gray-400 my-2 w-48"></span>
+                মোট টাকা: {totalPriceWithDelivery} টাকা
               </p>
             </div>
 
@@ -357,10 +394,9 @@ const ProductDetails = () => {
 
                 {/* Payment method buttons side by side */}
                 <div className="flex flex-col md:flex-row w-full md:w-2/3 gap-4">
-                  {(paymentMethod === "deliveryBkash" ||
-                    paymentMethod === "fullBkash") && (
+                  {paymentMethod === "deliveryBkash" && (
                     <button
-                      onClick={handleBkashPayment}
+                      onClick={handleBkashOrderAndRedirect} // Use the new handler for bKash
                       className="w-full md:w-1/2 bg-pink-600 hover:bg-pink-700 text-white py-3 rounded-lg font-semibold transition"
                     >
                       bKash দিয়ে পেমেন্ট করুন 💸{" "}
@@ -371,12 +407,14 @@ const ProductDetails = () => {
                     </button>
                   )}
 
-                  <button
-                    onClick={handleOrderSubmit}
-                    className="w-full md:w-1/2 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold transition"
-                  >
-                    এখানেই অর্ডার করুন
-                  </button>
+                  {paymentMethod === "cod" && (
+                    <button
+                      onClick={handleCODOrderSubmit} // Use the new handler for COD
+                      className="w-full md:w-1/2 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold transition"
+                    >
+                      এখানেই অর্ডার করুন
+                    </button>
+                  )}
                 </div>
               </div>
             </div>

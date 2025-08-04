@@ -105,11 +105,13 @@ const OrderList = () => {
                     }
                     className="border rounded px-2 py-1"
                   >
-                    {statusOptions.map((status) => (
-                      <option key={status} value={status}>
-                        {status}
-                      </option>
-                    ))}
+                    <span className="text-black">
+                      {statusOptions.map((status) => (
+                        <option key={status} value={status}>
+                          {status}
+                        </option>
+                      ))}
+                    </span>
                   </select>
                 </td>
                 <td className="border px-4 py-2">

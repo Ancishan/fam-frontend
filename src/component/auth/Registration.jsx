@@ -1,12 +1,15 @@
 "use client";
 import { useState } from "react";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { auth } from "@/firebase";
+import { createUserWithEmailAndPassword, signInWithPopup, updateProfile } from "firebase/auth";
+import { auth, googleProvider } from "@/firebase";
+import { FcGoogle } from "react-icons/fc";
+import { useRouter } from "next/navigation";
 
 const Register = () => {
   const [form, setForm] = useState({ email: "", password: "", name: "" });
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const router = useRouter();
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -17,8 +20,19 @@ const Register = () => {
       await updateProfile(userCredential.user, {
         displayName: form.name,
       });
-      setSuccess("✅ Registration successful! You can now login.");
+      setSuccess("✅ Registration successful!");
       setForm({ email: "", password: "", name: "" });
+      router.push("/login");
+    } catch (err) {
+      setError("❌ " + err.message);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    setError("");
+    try {
+      await signInWithPopup(auth, googleProvider);
+      router.push("/");
     } catch (err) {
       setError("❌ " + err.message);
     }
@@ -30,6 +44,7 @@ const Register = () => {
         <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">
           Create Your <span className="text-blue-600">DK-Gadgets</span> Account
         </h2>
+
         <form onSubmit={handleRegister} className="space-y-5">
           <div>
             <label className="block text-sm font-medium text-gray-600 mb-1">Full Name</label>
@@ -75,6 +90,18 @@ const Register = () => {
             Register
           </button>
         </form>
+
+        <div className="mt-6">
+          <button
+            onClick={handleGoogleSignIn}
+            type="button"
+            className="w-full flex items-center justify-center gap-3 bg-white border border-gray-300 hover:border-gray-400 text-gray-700 font-medium py-2.5 rounded-lg shadow-sm transition"
+          >
+            <FcGoogle size={22} />
+            Continue with Google
+          </button>
+        </div>
+
         <p className="mt-5 text-center text-sm text-gray-500">
           Already have an account?{" "}
           <a href="/login" className="text-blue-600 hover:underline">
