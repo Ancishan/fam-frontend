@@ -19,6 +19,7 @@ const UpdateProductPage = () => {
     description: '',
     discount: '',
     category: '',
+    stock: '', // <-- New: Added stock to state
   });
 
   const categories = [
@@ -34,7 +35,7 @@ const UpdateProductPage = () => {
     if (!id) return;
     const fetchData = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/products/${id}`);
+        const res = await axios.get(`https://dk-server.vercel.app/products/${id}`);
         setProduct(res.data.product);
         setFormData({
           name: res.data.product.name,
@@ -44,6 +45,7 @@ const UpdateProductPage = () => {
           description: res.data.product.description,
           discount: res.data.product.discount || '',
           category: res.data.product.category || '',
+          stock: res.data.product.stock || 0, // <-- New: Populated stock from product data
         });
         setLoading(false);
       } catch (err) {
@@ -90,7 +92,7 @@ const UpdateProductPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`http://localhost:5000/api/products/${id}`, formData);
+      await axios.put(`https://dk-server.vercel.app/api/products/${id}`, formData);
       alert('Product updated successfully');
       router.push('/admin');
     } catch (err) {
@@ -154,6 +156,20 @@ const UpdateProductPage = () => {
               value={formData.discount}
               onChange={handleChange}
               className='w-full p-2 border border-gray-300 rounded'
+            />
+          </div>
+
+          {/* <-- New: Input field for stock */}
+          <div>
+            <label htmlFor='stock' className='block text-sm font-medium'>Stock</label>
+            <input
+              type='number'
+              id='stock'
+              name='stock'
+              value={formData.stock}
+              onChange={handleChange}
+              className='w-full p-2 border border-gray-300 rounded'
+              required
             />
           </div>
 

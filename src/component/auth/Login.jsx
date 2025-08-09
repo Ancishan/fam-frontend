@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { useRouter, useSearchParams } from "next/navigation";
 import { auth } from "@/firebase";
@@ -9,28 +9,35 @@ import Link from "next/link";
 const Login = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirectUrl = searchParams.get("redirect") || "/";
+  const [redirectUrl, setRedirectUrl] = useState("/");
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
 
+  useEffect(() => {
+    // Set the redirect URL only after the component has mounted on the client
+    const redirect = searchParams.get("redirect") || "/";
+    setRedirectUrl(redirect);
+  }, [searchParams]);
+
+  // ইমেল বৈধ কিনা তা যাচাই করার জন্য একটি ফাংশন
   const emailIsValid = (email) =>
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
+  // সাধারণ লগইন হ্যান্ডলার
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
 
     if (!emailIsValid(email)) {
-      setError("Please enter a valid email address.");
+      setError("অনুগ্রহ করে একটি বৈধ ইমেল ঠিকানা লিখুন।");
       return;
     }
     if (password.length < 6) {
-      setError("Password must be at least 6 characters long.");
+      setError("পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।");
       return;
     }
 
@@ -42,23 +49,23 @@ const Login = () => {
     } catch (err) {
       switch (err.code) {
         case "auth/user-not-found":
-          setError("No user found with this email.");
+          setError("এই ইমেল দিয়ে কোনো ব্যবহারকারী পাওয়া যায়নি।");
           break;
         case "auth/wrong-password":
-          setError("Incorrect password.");
+          setError("ভুল পাসওয়ার্ড।");
           break;
         case "auth/too-many-requests":
-          setError("Too many login attempts. Please try again later.");
+          setError("অনেকবার চেষ্টা করা হয়েছে। অনুগ্রহ করে কিছুক্ষণ পর আবার চেষ্টা করুন।");
           break;
         default:
-          setError("Failed to login. Please check your credentials.");
+          setError("লগইন ব্যর্থ হয়েছে। অনুগ্রহ করে আপনার তথ্য যাচাই করুন।");
       }
     }
 
     setLoading(false);
   };
 
-  // Google Sign-In handler
+  // গুগল সাইন-ইন হ্যান্ডলার
   const handleGoogleSignIn = async () => {
     setError("");
     setGoogleLoading(true);
@@ -69,7 +76,7 @@ const Login = () => {
       await signInWithPopup(auth, provider);
       router.push(redirectUrl);
     } catch (err) {
-      setError("Google Sign-In failed. Please try again.");
+      setError("গুগল দিয়ে সাইন-ইন ব্যর্থ হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।");
       console.error("Google Sign-In error:", err);
     }
 
@@ -80,14 +87,14 @@ const Login = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4">
       <div className="max-w-md w-full bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg">
         <h1 className="text-3xl font-semibold text-center text-gray-900 dark:text-white mb-6">
-          Welcome Back
+            স্বাগতম dk-gadgget-hub
         </h1>
         <form onSubmit={handleLogin} noValidate>
           <label
             htmlFor="email"
             className="block text-gray-700 dark:text-gray-300 mb-1 font-medium"
           >
-            Email Address
+            ইমেল ঠিকানা
           </label>
           <input
             id="email"
@@ -104,12 +111,12 @@ const Login = () => {
             htmlFor="password"
             className="block text-gray-700 dark:text-gray-300 mb-1 font-medium"
           >
-            Password
+            পাসওয়ার্ড
           </label>
           <input
             id="password"
             type="password"
-            placeholder="Your password"
+            placeholder="আপনার পাসওয়ার্ড"
             className="w-full mb-6 px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -125,15 +132,15 @@ const Login = () => {
               loading ? "bg-indigo-400 cursor-not-allowed" : "bg-indigo-600 hover:bg-indigo-700"
             } transition`}
           >
-            {loading ? "Logging in..." : "Login"}
+            {loading ? "লগইন করা হচ্ছে..." : "লগইন করুন"}
           </button>
         </form>
 
         <div className="my-4 flex items-center justify-center space-x-2">
-          <span className="text-gray-400 dark:text-gray-500">or</span>
+          <span className="text-gray-400 dark:text-gray-500">অথবা</span>
         </div>
 
-        {/* Google Sign-In Button */}
+        {/* গুগল সাইন-ইন বাটন */}
         <button
           onClick={handleGoogleSignIn}
           disabled={googleLoading}
@@ -161,7 +168,7 @@ const Login = () => {
               d="M12 4.756c1.7 0 3.225.58 4.426 1.72l3.316-3.316C17.96 1.27 15.233 0 12 0 7.04 0 2.73 2.856 1.187 6.61l3.988 3.146C5.936 7.482 8.706 4.756 12 4.756z"
             />
           </svg>
-          {googleLoading ? "Signing in..." : "Sign in with Google"}
+          {googleLoading ? "সাইন-ইন করা হচ্ছে..." : "গুগল দিয়ে সাইন-ইন করুন"}
         </button>
 
         {error && (
@@ -175,12 +182,12 @@ const Login = () => {
         )}
 
         <p className="mt-6 text-center text-gray-600 dark:text-gray-400">
-          Don't have an account?{" "}
+          কোনো অ্যাকাউন্ট নেই?{" "}
           <Link
             href="/registration"
             className="text-indigo-600 hover:text-indigo-700 font-semibold"
           >
-            Register here
+            এখানে রেজিস্ট্রেশন করুন
           </Link>
         </p>
       </div>

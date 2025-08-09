@@ -19,7 +19,7 @@ const UpdateBanner = () => {
     const fetchBanner = async () => {
       try {
         console.log("Banner ID:", id); // Debug
-        const res = await axios.get(`http://localhost:5000/banner/${id}`);
+        const res = await axios.get(`https://dk-server.vercel.app/banner/${id}`);
         console.log("Fetched banner:", res.data); // Debug
         setBanner(res.data);
         setLoading(false);
@@ -52,7 +52,7 @@ const UpdateBanner = () => {
         imageUrl = await uploadToImgbb();
       }
 
-      await axios.put(`http://localhost:5000/banner/${id}`, {
+      await axios.put(`https://dk-server.vercel.app/banner/${id}`, {
         image: imageUrl,
         caption: banner.caption,
       });

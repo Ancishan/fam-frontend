@@ -16,7 +16,7 @@ const ShowProductt = () => {
       setLoading(true);
       setError(null);
       try {
-        const response = await axios.get("http://localhost:5000/products");
+        const response = await axios.get("https://dk-server.vercel.app/products");
         setAllProducts(response.data); // Save the original, unsorted list
         setProducts(response.data); // Display the initial list
       } catch (err) {
@@ -77,27 +77,25 @@ const ShowProductt = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="flex justify-between items-center mb-8">
-        <h2 className="text-2xl md:text-3xl font-semibold text-gray-900 dark:text-white">
-          Our Products
-        </h2>
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+         <h2 className="text-2xl font-bold">আমাদের পণ্যসমূহ</h2>
         {/* Sort dropdown */}
-        <div className="flex items-center gap-2">
-          <label
+         <div className="flex items-center space-x-2">
+         <label
             htmlFor="sort-by-price"
-            className="text-xl font-medium text-gray-700 dark:text-gray-300"
+            className="text-base md:text-xl font-medium text-gray-700 dark:text-gray-300"
           >
-            Sort by Price:
+            দাম অনুযায়ী সাজান:
           </label>
           <select
             id="sort-by-price"
             value={sortOption}
             onChange={handleSortChange}
-            className="p-2 border border-gray-300 rounded-md dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+            className="border border-gray-300 rounded px-2 py-1 dark:bg-gray-800 dark:text-white"
           >
             <option value="">Default</option>
-            <option value="price_asc">Price: Low to High</option>
-            <option value="price_desc">Price: High to Low</option>
+            <option value="price_asc">কম থেকে বেশি</option>
+            <option value="price_desc">বেশি থেকে কম</option>
           </select>
         </div>
       </div>

@@ -19,6 +19,9 @@ const ProductReceivePolicy = () => {
         <li>
           ✅ ২/৩ দিনের মধ্যে হোম ডেলিভারি করা হয়।
         </li>
+        <li>
+          ✅  অগ্রীম ডেলিভারি চার্জ নেওয়া হয় ।
+        </li>
         <li className="text-red-600 font-medium">
           ❌ যদি <strong>Unboxing ভিডিও না</strong> করেন এবং পরবর্তীতে প্রডাক্ট নষ্ট বের হয়, তাহলে <strong>রিপ্লেসমেন্ট গ্রহণযোগ্য হবে না</strong>।
         </li>

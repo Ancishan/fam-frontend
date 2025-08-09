@@ -20,7 +20,7 @@ const Register = () => {
       await updateProfile(userCredential.user, {
         displayName: form.name,
       });
-      setSuccess("✅ Registration successful!");
+      setSuccess("✅ রেজিস্ট্রেশন সফল হয়েছে!");
       setForm({ email: "", password: "", name: "" });
       router.push("/login");
     } catch (err) {
@@ -42,15 +42,15 @@ const Register = () => {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-blue-100 px-4">
       <div className="w-full max-w-md bg-white shadow-2xl rounded-2xl p-8 border border-gray-200">
         <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">
-          Create Your <span className="text-blue-600">DK-Gadgets</span> Account
+          আপনার <span className="text-blue-600">DK-Gadgets</span> অ্যাকাউন্ট তৈরি করুন
         </h2>
 
         <form onSubmit={handleRegister} className="space-y-5">
           <div>
-            <label className="block text-sm font-medium text-gray-600 mb-1">Full Name</label>
+            <label className="block text-sm font-medium text-gray-600 mb-1">পুরো নাম</label>
             <input
               type="text"
-              placeholder="Your full name"
+              placeholder="আপনার পুরো নাম"
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
               required
@@ -58,7 +58,7 @@ const Register = () => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-600 mb-1">Email Address</label>
+            <label className="block text-sm font-medium text-gray-600 mb-1">ইমেল ঠিকানা</label>
             <input
               type="email"
               placeholder="you@example.com"
@@ -69,7 +69,7 @@ const Register = () => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-600 mb-1">Password</label>
+            <label className="block text-sm font-medium text-gray-600 mb-1">পাসওয়ার্ড</label>
             <input
               type="password"
               placeholder="********"
@@ -87,7 +87,7 @@ const Register = () => {
             type="submit"
             className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg shadow-md transition"
           >
-            Register
+            রেজিস্টার করুন
           </button>
         </form>
 
@@ -98,14 +98,14 @@ const Register = () => {
             className="w-full flex items-center justify-center gap-3 bg-white border border-gray-300 hover:border-gray-400 text-gray-700 font-medium py-2.5 rounded-lg shadow-sm transition"
           >
             <FcGoogle size={22} />
-            Continue with Google
+            গুগল দিয়ে চালিয়ে যান
           </button>
         </div>
 
         <p className="mt-5 text-center text-sm text-gray-500">
-          Already have an account?{" "}
+          ইতিমধ্যেই একটি অ্যাকাউন্ট আছে?{" "}
           <a href="/login" className="text-blue-600 hover:underline">
-            Login
+            লগইন করুন
           </a>
         </p>
       </div>

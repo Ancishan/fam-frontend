@@ -7,6 +7,8 @@ import Image from "next/image";
 import { useAuth } from "@/context/AuthContext";
 import ProductReceivePolicy from "@/component/ProductReceivePolicy";
 import toast from "react-hot-toast"; // Import toast
+import { FaShoppingCart } from "react-icons/fa";
+import Link from "next/link";
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -40,7 +42,7 @@ const ProductDetails = () => {
     setLoadingProduct(true);
 
     axios
-      .get(`http://localhost:5000/products/${id}`)
+      .get(`https://dk-server.vercel.app/products/${id}`)
       .then((res) => {
         if (res.data.success) {
           setProduct(res.data.product);
@@ -102,6 +104,12 @@ const ProductDetails = () => {
       return;
     }
 
+    // <-- New: Added check for stock before ordering
+    if (product.stock < quantity) {
+      toast.error(`দুঃখিত, আমাদের কাছে মাত্র ${product.stock}টি পণ্য আছে।`);
+      return;
+    }
+
     try {
       const orderData = {
         productId: product._id,
@@ -117,7 +125,7 @@ const ProductDetails = () => {
         status: "bkash_pending_verification", // New status for bKash orders awaiting verification
       };
 
-      const res = await axios.post("http://localhost:5000/order", orderData);
+      const res = await axios.post("https://dk-server.vercel.app/order", orderData);
 
       if (res.data.success) {
         if (paymentMethod === "deliveryBkash") {
@@ -147,6 +155,12 @@ const ProductDetails = () => {
       return;
     }
 
+    // <-- New: Added check for stock before ordering
+    if (product.stock < quantity) {
+      toast.error(`দুঃখিত, আমাদের কাছে মাত্র ${product.stock}টি পণ্য আছে।`);
+      return;
+    }
+
     try {
       const orderData = {
         productId: product._id,
@@ -162,7 +176,7 @@ const ProductDetails = () => {
         status: "pending", // Default status for COD
       };
 
-      const res = await axios.post("http://localhost:5000/order", orderData);
+      const res = await axios.post("https://dk-server.vercel.app/order", orderData);
 
       if (res.data.success) {
         setOrderConfirmedCOD(true); // Set COD specific confirmation
@@ -187,7 +201,8 @@ const ProductDetails = () => {
             অনুগ্রহ করে নতুন ট্যাবে খোলা বিকাশ পেমেন্ট সম্পন্ন করুন। পেমেন্ট সফল
             হলে, আপনার **ট্রানজেকশন আইডি** (Transaction ID) সংরক্ষণ করুন।
             <br />
-            এরপর, আপনার অর্ডারটি নিশ্চিত করতে "আমার অর্ডারসমূহ" সেকশনে গিয়ে
+            এরপর, আপনার অর্ডারটি নিশ্চিত করতে{" "}
+            <span className="font-bold ">আমার অর্ডারসমূহ</span> সেকশনে গিয়ে
             ট্রানজেকশন আইডিটি জমা দিন।
           </p>
           <button
@@ -233,11 +248,17 @@ const ProductDetails = () => {
               />
               <h1 className="text-3xl font-bold text-black">{product.name}</h1>
               <p className="text-sm text-black mt-1">Model: {product.model}</p>
+
+              {/* <-- New: Displaying stock status */}
+              {product.stock > 0 ? (
+                <p className="text-green-600 font-bold mt-2">
+                  In Stock - {product.stock} items
+                </p>
+              ) : (
+                <p className="text-red-600 font-bold mt-2">Sold Out</p>
+              )}
+
               <p className="text-black mt-4">{product.description}</p>
-              {/* <p className="text-2xl font-semibold text-black mt-6">
-                ৳ {discountedPrice} x {quantity} = ৳ {totalPrice}
-              </p> */}
-              {/* This is the new line showing the breakdown */}
               <p className="text-lg font-semibold text-black mt-2 leading-relaxed">
                 পণ্যের মূল্য: {totalPrice} টাকা
                 <br />
@@ -254,9 +275,15 @@ const ProductDetails = () => {
                 আপনার অর্ডারটি কনফার্ম করতে নিচের তথ্যগুলো পূরণ করুন
               </h2>
               <p className="text-sm text-red-500 mb-2">
-                🔹 আপনার নাম লিখুন <br />
-                🔹 আপনার নাম্বার লিখুন <br />
-                🔹 ঠিকানা লিখুন (অবশ্যই জেলার নাম এবং উপজেলা বা থানার নাম দিবেন)
+                🔹 আমাদের পলিসি অনুযায়ী আপনাকে আমাদের পেইজের প্রোডাক্ট অর্ডার
+                করতে আগে একাউন্ট ক্রিয়েট করতে
+                <Link
+                  href="/registration"
+                  className="underline text-blue-600 hover:text-blue-800 ml-1"
+                >
+                   👆 ক্লিক করুন
+                </Link>{" "}
+                হবে <br />
               </p>
 
               <label
@@ -330,16 +357,20 @@ const ProductDetails = () => {
                 <span className="text-black font-medium">পণ্যের পরিমাণ:</span>
                 <button
                   onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                  className="w-8 h-8 rounded-full text-black bg-gray-200 hover:bg-gray-300 text-lg font-bold"
+                  className="w-8 h-8 rounded-full text-black bg-gray-200 hover:bg-gray-300 text-lg font-bold disabled:opacity-50 disabled:cursor-not-allowed"
                   aria-label="কমান"
+                  disabled={product.stock === 0} // <-- New: Disabled if out of stock
                 >
                   −
                 </button>
                 <span className="text-xl text-black">{quantity}</span>
                 <button
-                  onClick={() => setQuantity((q) => q + 1)}
-                  className="w-8 h-8 rounded-full text-black bg-gray-200 hover:bg-gray-300 text-lg font-bold"
+                  onClick={() =>
+                    setQuantity((q) => Math.min(product.stock, q + 1))
+                  } // <-- New: Added quantity limit
+                  className="w-8 h-8 rounded-full text-black bg-gray-200 hover:bg-gray-300 text-lg font-bold disabled:opacity-50 disabled:cursor-not-allowed"
                   aria-label="বাড়ান"
+                  disabled={product.stock === 0 || quantity >= product.stock} // <-- New: Disabled if out of stock or at max quantity
                 >
                   +
                 </button>
@@ -358,6 +389,7 @@ const ProductDetails = () => {
                       value="cod"
                       checked={paymentMethod === "cod"}
                       onChange={() => setPaymentMethod("cod")}
+                      disabled={product.stock === 0} // <-- New: Disabled if out of stock
                     />
                     <span className="text-black">
                       Cash on Delivery (ডেলিভারি চার্জ সহ ক্যাশ অন ডেলিভারি)
@@ -371,6 +403,7 @@ const ProductDetails = () => {
                       value="deliveryBkash"
                       checked={paymentMethod === "deliveryBkash"}
                       onChange={() => setPaymentMethod("deliveryBkash")}
+                      disabled={product.stock === 0} // <-- New: Disabled if out of stock
                     />
                     <span className="text-black">
                       Full pay with Delivery Charge via bKash (ফুল পেমেন্ট সহ
@@ -387,7 +420,12 @@ const ProductDetails = () => {
                   href={whatsappLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full md:w-1/3 bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-semibold text-center transition"
+                  className={`w-full md:w-1/3 text-white py-3 rounded-lg font-semibold text-center transition ${
+                    product.stock === 0
+                      ? "bg-gray-400 cursor-not-allowed"
+                      : "bg-green-600 hover:bg-green-700"
+                  }`}
+                  aria-disabled={product.stock === 0}
                 >
                   WhatsApp-এ অর্ডার করুন 💬
                 </a>
@@ -396,13 +434,20 @@ const ProductDetails = () => {
                 <div className="flex flex-col md:flex-row w-full md:w-2/3 gap-4">
                   {paymentMethod === "deliveryBkash" && (
                     <button
-                      onClick={handleBkashOrderAndRedirect} // Use the new handler for bKash
-                      className="w-full md:w-1/2 bg-pink-600 hover:bg-pink-700 text-white py-3 rounded-lg font-semibold transition"
+                      onClick={handleBkashOrderAndRedirect}
+                      className={`w-full md:w-1/2 text-white py-3 rounded-lg font-semibold transition ${
+                        product.stock === 0
+                          ? "bg-gray-400 cursor-not-allowed"
+                          : "bg-pink-600 hover:bg-pink-700"
+                      }`}
+                      disabled={product.stock === 0} // <-- New: Disabled if out of stock
                     >
-                      bKash দিয়ে পেমেন্ট করুন 💸{" "}
-                      <span className="text-sm">
-                        (ট্রানজেকশন আইডি সংরক্ষণ করে My-Orders সেকশনে ভেরীফাই
-                        করে নিন)
+                      bKash দিয়ে পেমেন্ট করুন
+                      <span className="text-sm block mt-2 text-center text-amber-200">
+                        পেমেন্ট সম্পন্ন হলে, **ট্রানজেকশন আইডিটি** সংরক্ষণ করুন
+                        এবং
+                        <FaShoppingCart className="inline text-lg mx-1" />
+                        **ভেরিফাই** সেকশনে গিয়ে যাচাই করে নিন।
                       </span>
                     </button>
                   )}
@@ -410,7 +455,12 @@ const ProductDetails = () => {
                   {paymentMethod === "cod" && (
                     <button
                       onClick={handleCODOrderSubmit} // Use the new handler for COD
-                      className="w-full md:w-1/2 bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold transition"
+                      className={`w-full md:w-1/2 text-white py-3 rounded-lg font-semibold transition ${
+                        product.stock === 0
+                          ? "bg-gray-400 cursor-not-allowed"
+                          : "bg-blue-600 hover:bg-blue-700"
+                      }`}
+                      disabled={product.stock === 0} // <-- New: Disabled if out of stock
                     >
                       এখানেই অর্ডার করুন
                     </button>

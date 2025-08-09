@@ -4,6 +4,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
+import Image from "next/image";
 
 const UpdateComboProduct = () => {
   const { id } = useParams();
@@ -23,7 +24,7 @@ const UpdateComboProduct = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/combo/${id}`);
+        const res = await axios.get(`https://dk-server.vercel.app/combo/${id}`);
         setProduct(res.data);
         setLoading(false);
       } catch (err) {
@@ -47,7 +48,10 @@ const UpdateComboProduct = () => {
     files.forEach((file) => formData.append("image", file));
 
     try {
-      const res = await axios.post("http://localhost:5000/upload", formData);
+      const res = await axios.post(
+        "https://dk-server.vercel.app/upload",
+        formData
+      );
       setProduct((prev) => ({
         ...prev,
         images: [...prev.images, ...res.data.imageUrls],
@@ -62,7 +66,7 @@ const UpdateComboProduct = () => {
     e.preventDefault();
     setSubmitting(true);
     try {
-      await axios.put(`http://localhost:5000/combo/${id}`, product);
+      await axios.put(`https://dk-server.vercel.app/combo/${id}`, product);
       alert("Product updated successfully!");
       router.push("/admin");
     } catch (err) {
@@ -73,17 +77,24 @@ const UpdateComboProduct = () => {
     }
   };
 
-  if (loading) return <p className="text-center py-10">Loading product data...</p>;
+  if (loading)
+    return <p className="text-center py-10">Loading product data...</p>;
 
   return (
     <div className="max-w-3xl mx-auto px-6 py-10 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
-      <h2 className="text-2xl font-bold mb-6 text-center text-pink-600">Update Combo Product</h2>
+      <h2 className="text-2xl font-bold mb-6 text-center text-pink-600">
+        Update Combo Product
+      </h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         {["name", "model", "price", "discount", "description"].map((field) => (
           <div key={field}>
-            <label className="block text-sm font-medium mb-1 capitalize">{field}</label>
+            <label className="block text-sm font-medium mb-1 capitalize">
+              {field}
+            </label>
             <input
-              type={field === "price" || field === "discount" ? "number" : "text"}
+              type={
+                field === "price" || field === "discount" ? "number" : "text"
+              }
               name={field}
               value={product[field] || ""}
               onChange={handleChange}
@@ -94,7 +105,9 @@ const UpdateComboProduct = () => {
         ))}
 
         <div>
-          <label className="block text-sm font-medium mb-1">Upload Images</label>
+          <label className="block text-sm font-medium mb-1">
+            Upload Images
+          </label>
           <input
             type="file"
             multiple
@@ -105,11 +118,13 @@ const UpdateComboProduct = () => {
 
         <div className="flex flex-wrap gap-2 mt-2">
           {product.images.map((img, idx) => (
-            <img
+            <Image
               key={idx}
               src={img}
               alt="Combo"
-              className="w-24 h-24 object-cover rounded border"
+              width={96}
+              height={96}
+              className="object-cover rounded border"
             />
           ))}
         </div>

@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import ProductCard from "../product/ProductCard";
@@ -17,7 +17,9 @@ const SearchProduct = () => {
 
     const fetchData = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/search?q=${search}`);
+        const res = await axios.get(
+          `https://dk-server.vercel.app/search?q=${search}`
+        );
         setProducts(res.data);
       } catch (err) {
         console.error(err);
@@ -37,16 +39,17 @@ const SearchProduct = () => {
       <div className="flex justify-center items-center gap-2 mb-4">
         <input
           type="text"
-          placeholder="প্রোডাক্টের নাম লিখুন..."
+          placeholder='প্রোডাক্টের নাম লিখুন..'
           className="border p-2 w-96 rounded"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           onKeyDown={(e) => {
-            if (e.key === 'Enter') {
-              handleSearch(); // Also search on Enter key press
+            if (e.key === "Enter") {
+              handleSearch();
             }
           }}
         />
+
         <button
           onClick={handleSearch}
           className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
@@ -55,14 +58,13 @@ const SearchProduct = () => {
         </button>
       </div>
 
-<div className="flex justify-center mt-6">
-  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl">
-    {products.map((product) => (
-      <ProductCard key={product._id} product={product} />
-    ))}
-  </div>
-</div>
-
+      <div className="flex justify-center mt-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl">
+          {products.map((product) => (
+            <ProductCard key={product._id} product={product} />
+          ))}
+        </div>
+      </div>
     </div>
   );
 };

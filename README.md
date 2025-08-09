@@ -4,7 +4,7 @@ A full-stack e-commerce web application built with **Next.js**, **Express.js**, 
 
 ---
 
-## 🌐 Live Features : https://dk-gadget-hub.vercel.app
+## 🌐 Live Features : https://dk-server.vercel.app
 
 ### 🛍️ User (Frontend)
 - View **homepage** with:

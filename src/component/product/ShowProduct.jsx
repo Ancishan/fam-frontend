@@ -11,7 +11,7 @@ const ShowProduct = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/products");
+        const response = await axios.get("https://dk-server.vercel.app/products");
         console.log("API Response:", response.data); // Debug log
         setProducts(response.data);
       } catch (error) {

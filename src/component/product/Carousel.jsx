@@ -11,7 +11,7 @@ const Carousel = () => {
   useEffect(() => {
     const fetchBanners = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/banner");
+        const res = await axios.get("https://dk-server.vercel.app/banner");
         setBanners(res.data);
       } catch (err) {
         console.error("Failed to fetch banners:", err);
@@ -68,7 +68,7 @@ const Carousel = () => {
             key={index}
             onClick={() => setCurrentIndex(index)}
             className={`w-3 h-3 rounded-full transition-all ${
-              currentIndex === index ? "bg-pink-500 scale-110" : "bg-white bg-opacity-50"
+              currentIndex === index ? "bg-black-500 scale-110" : "bg-white bg-opacity-50"
             }`}
             aria-label={`Go to slide ${index + 1}`}
           />

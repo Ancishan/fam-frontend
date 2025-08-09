@@ -14,13 +14,13 @@ const MyOrders = () => {
 
   const bkashDeliveryChargeLink =
     "https://shop.bkash.com/tansir-telecom01318962340/paymentlink";
-const deliveryChargeAmount = 130;
+const deliveryChargeAmount = 99;
  useEffect(() => {
     if (user?.email) {
       const fetchOrders = async () => {
         try {
           const res = await axios.get(
-            `http://localhost:5000/my-orders?email=${user.email}`
+            `https://dk-server.vercel.app/my-orders?email=${user.email}`
           );
           if (res.data.success) {
             setOrders(res.data.orders);
@@ -56,7 +56,7 @@ const deliveryChargeAmount = 130;
     }
 
     try {
-      const res = await axios.patch(`http://localhost:5000/orders/${orderId}`, {
+      const res = await axios.patch(`https://dk-server.vercel.app/orders/${orderId}`, {
         transactionId,
       });
 

@@ -32,7 +32,7 @@ const AdminPage = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:5000/admin", form);
+      const res = await axios.post("https://dk-server.vercel.app/admin", form);
       if (res.data.success) {
         setAuth(true);
         localStorage.setItem("isAdminAuthenticated", "true");

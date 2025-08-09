@@ -11,7 +11,7 @@ const AllComboProduct = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/combo");
+        const res = await axios.get("https://dk-server.vercel.app/combo");
         setComboProducts(res.data);
       } catch (err) {
         console.error("Failed to fetch combo products:", err);
@@ -27,7 +27,7 @@ const AllComboProduct = () => {
     if (!confirm) return;
 
     try {
-      await axios.delete(`http://localhost:5000/combo/${id}`);
+      await axios.delete(`https://dk-server.vercel.app/combo/${id}`);
       setComboProducts((prev) => prev.filter((item) => item._id !== id));
       alert("Product deleted successfully!");
     } catch (err) {

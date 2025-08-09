@@ -12,7 +12,7 @@ const OrderList = () => {
 
   const fetchOrders = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/orders");
+      const res = await axios.get("https://dk-server.vercel.app/orders");
       if (Array.isArray(res.data)) {
         setOrders(res.data);
       } else if (Array.isArray(res.data.orders)) {
@@ -33,7 +33,7 @@ const OrderList = () => {
 
   const handleStatusChange = async (orderId, newStatus) => {
     try {
-      await axios.patch(`http://localhost:5000/orders/${orderId}`, {
+      await axios.patch(`https://dk-server.vercel.app/orders/${orderId}`, {
         status: newStatus,
       });
 
@@ -46,6 +46,22 @@ const OrderList = () => {
     } catch (err) {
       console.error("Failed to update status:", err);
       alert("Status update failed");
+    }
+  };
+  // New function to handle order deletion
+  const handleDeleteOrder = async (orderId) => {
+    if (window.confirm("Are you sure you want to delete this order?")) {
+      try {
+        await axios.delete(`https://dk-server.vercel.app/orders/${orderId}`);
+
+        // Update the local state to remove the deleted order
+        setOrders((prevOrders) =>
+          prevOrders.filter((order) => order._id !== orderId)
+        );
+      } catch (err) {
+        console.error("Failed to delete order:", err);
+        alert("Order deletion failed");
+      }
     }
   };
 
@@ -103,15 +119,13 @@ const OrderList = () => {
                     onChange={(e) =>
                       handleStatusChange(order._id, e.target.value)
                     }
-                    className="border rounded px-2 py-1"
+                    className="border rounded px-2 py-1 text-black" // Apply text-black class here
                   >
-                    <span className="text-black">
-                      {statusOptions.map((status) => (
-                        <option key={status} value={status}>
-                          {status}
-                        </option>
-                      ))}
-                    </span>
+                    {statusOptions.map((status) => (
+                      <option key={status} value={status}>
+                        {status}
+                      </option>
+                    ))}
                   </select>
                 </td>
                 <td className="border px-4 py-2">
@@ -120,6 +134,14 @@ const OrderList = () => {
                     : order.orderedBy === "bkash"
                     ? "bKash"
                     : "Unknown"}
+                </td>
+                <td className="border px-4 py-2">
+                  <button
+                    onClick={() => handleDeleteOrder(order._id)}
+                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded"
+                  >
+                    Delete
+                  </button>
                 </td>
               </tr>
             ))}

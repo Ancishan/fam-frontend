@@ -9,10 +9,11 @@ const AddProduct = () => {
     name: "",
     model: "",
     price: "",
-    discount: "", // Added discount field
+    discount: "",
     description: "",
     image: "",
-    category: "sports", // default value
+    category: "sports",
+    stock: "",
   });
 
   const categories = [
@@ -30,7 +31,11 @@ const AddProduct = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setProduct({ ...product, [name]: value });
+    // Handle number inputs to ensure they are stored as numbers
+    const finalValue = name === "price" || name === "discount" || name === "stock"
+      ? Number(value)
+      : value;
+    setProduct({ ...product, [name]: finalValue });
   };
 
   const handleImageUpload = async (e) => {
@@ -59,7 +64,7 @@ const AddProduct = () => {
     setIsSubmitting(true);
 
     try {
-      const res = await axios.post("http://localhost:5000/products", product);
+      const res = await axios.post("https://dk-server.vercel.app/products", product);
       console.log("Product saved:", res.data);
       alert("Product added successfully!");
       router.push("/admin");
@@ -79,10 +84,13 @@ const AddProduct = () => {
 
       <form onSubmit={handleSubmit} className="space-y-5">
         {/* Basic Fields */}
-        {[{ label: "Product Name", name: "name", type: "text" },
+        {[
+          { label: "Product Name", name: "name", type: "text" },
           { label: "Model/Size", name: "model", type: "text" },
           { label: "Price", name: "price", type: "number" },
-          { label: "Discount (%)", name: "discount", type: "number" }].map((field) => (
+          { label: "Discount (%)", name: "discount", type: "number" },
+          { label: "Stock Quantity", name: "stock", type: "number" } // <-- New: Added 'stock' input field
+        ].map((field) => (
           <div key={field.name}>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               {field.label}
@@ -92,7 +100,7 @@ const AddProduct = () => {
               name={field.name}
               value={product[field.name]}
               onChange={handleChange}
-              required={field.name !== "discount"} // optional for discount
+              required={field.name !== "discount"} // <-- 'stock' is now a required field
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 dark:bg-gray-700 dark:text-white dark:border-gray-600 dark:focus:ring-pink-400"
             />
           </div>

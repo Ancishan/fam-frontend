@@ -12,7 +12,7 @@ const AllProduct = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/products");
+        const res = await axios.get("https://dk-server.vercel.app/products");
         setProducts(res.data);
       } catch (err) {
         console.error("Failed to fetch products:", err);
@@ -25,7 +25,7 @@ const AllProduct = () => {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this product?")) {
       try {
-        await axios.delete(`http://localhost:5000/api/products/${id}`);
+        await axios.delete(`https://dk-server.vercel.app/api/products/${id}`);
         setProducts(products.filter((product) => product._id !== id));
         alert("Product deleted successfully");
       } catch (err) {
@@ -60,6 +60,8 @@ const AllProduct = () => {
             <p className="text-violet-900">Discount: {product.discount}%</p>
             <p className="text-violet-900">Category: {product.category}</p>
             <p className="text-violet-900">Size: {product.model}</p>
+            {/* New line to display stock */}
+            <p className="text-violet-900">Stock: {product.stock}</p> 
 
             <div className="flex gap-2 mt-3">
               <button
